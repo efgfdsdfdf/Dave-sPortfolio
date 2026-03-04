@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin · manage projects</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&display=swap" rel="stylesheet">
+  <style>
+    /* small tweaks for admin forms (keep existing, add these) */
+    .admin-section { max-width: 800px; margin: 0 auto; }
+    .admin-form {
+      background: var(--bg-card);
+      padding: var(--space-md);
+      border-radius: var(--rounded);
+      border: 1px solid var(--border-light);
+      margin-bottom: var(--space-lg);
+    }
+    .form-row { margin-bottom: 16px; }
+    .form-row label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent);
+      font-weight: 400;
+    }
+    .form-row input,
+    .form-row textarea,
+    .form-row select {
+      width: 100%;
+      background: #1a2938;
+      border: 1px solid var(--border-light);
+      border-radius: var(--rounded-sm);
+      padding: 12px;
+      color: var(--text-primary);
+      font-family: inherit;
+    }
+    .form-row input:focus,
+    .form-row textarea:focus,
+    .form-row select:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+    .project-item {
+      background: var(--bg-secondary);
+      border-radius: var(--rounded-sm);
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .project-actions button {
+      background: transparent;
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      padding: 6px 12px;
+      border-radius: 30px;
+      margin-left: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .project-actions button:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .password-prompt {
+      background: var(--bg-card);
+      padding: var(--space-md);
+      border-radius: var(--rounded);
+      text-align: center;
+      max-width: 400px;
+      margin: 40px auto;
+    }
+    .hidden { display: none; }
+
+    /* Modal for editing */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--accent);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      max-width: 600px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="index.html" class="logo">EZEILO DAVID</a>
+      <nav class="main-nav">
+        <ul>
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="projects.html" class="nav-link">Projects</a></li>
+          <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container admin-section">
+    <h1 class="section-title">Project admin</h1>
+
+    <!-- simple password protection -->
+    <div id="passwordWrapper" class="password-prompt">
+      <p style="margin-bottom: 16px;">Enter admin password:</p>
+      <input type="password" id="adminPass" style="width:100%; padding:10px; background:#1a2938; border:1px solid var(--border-light); border-radius:30px; color:white;">
+      <button id="unlockBtn" class="btn btn-secondary" style="margin-top:16px;">Unlock</button>
+      <p style="margin-top:12px; font-size:0.9rem; color:var(--text-secondary)"></p>
+    </div>
+
+    <div id="adminPanel" class="hidden">
+      <!-- Add new project form (always visible) -->
+      <div class="admin-form">
+        <h3 style="margin-bottom: 16px;">➕ Add new project</h3>
+        <div class="form-row">
+          <label>Title</label>
+          <input type="text" id="title" placeholder="e.g. OmniStore API">
+        </div>
+        <div class="form-row">
+          <label>Short description</label>
+          <input type="text" id="desc" placeholder="Brief overview">
+        </div>
+        <div class="form-row">
+          <label>Problem it solved</label>
+          <textarea id="problem" rows="2"></textarea>
+        </div>
+        <div class="form-row">
+          <label>Tech stack (comma separated)</label>
+          <input type="text" id="tech" placeholder="Node.js, Express, PostgreSQL">
+        </div>
+        <div class="form-row">
+          <label>Architecture explanation</label>
+          <textarea id="arch" rows="2"></textarea>
+        </div>
+        <div class="form-row">
+          <label>Category</label>
+          <select id="category">
+            <option value="frontend">Frontend</option>
+            <option value="backend">Backend</option>
+            <option value="fullstack">Fullstack</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label>GitHub link (placeholder)</label>
+          <input type="text" id="github" value="#">
+        </div>
+        <div class="form-row">
+          <label>Live demo link (placeholder)</label>
+          <input type="text" id="demo" value="#">
+        </div>
+        <button id="addProjectBtn" class="btn btn-primary">Add project</button>
+      </div>
+
+      <h3 style="margin: 32px 0 16px;">📋 Existing projects</h3>
+      <div id="projectList"></div>
+      <button id="resetDefaultsBtn" class="btn btn-secondary" style="margin-top:24px;">Reset to default projects</button>
+    </div>
+  </main>
+
+  <!-- EDIT MODAL -->
+  <div class="modal" id="editModal">
+    <div class="modal-content">
+      <h3 style="margin-bottom: 16px;">✏️ Edit project</h3>
+      <div class="form-row">
+        <label>Title</label>
+        <input type="text" id="edit-title">
+      </div>
+      <div class="form-row">
+        <label>Short description</label>
+        <input type="text" id="edit-desc">
+      </div>
+      <div class="form-row">
+        <label>Problem it solved</label>
+        <textarea id="edit-problem" rows="2"></textarea>
+      </div>
+      <div class="form-row">
+        <label>Tech stack (comma separated)</label>
+        <input type="text" id="edit-tech">
+      </div>
+      <div class="form-row">
+        <label>Architecture explanation</label>
+        <textarea id="edit-arch" rows="2"></textarea>
+      </div>
+      <div class="form-row">
+        <label>Category</label>
+        <select id="edit-category">
+          <option value="frontend">Frontend</option>
+          <option value="backend">Backend</option>
+          <option value="fullstack">Fullstack</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>GitHub link</label>
+        <input type="text" id="edit-github">
+      </div>
+      <div class="form-row">
+        <label>Live demo link</label>
+        <input type="text" id="edit-demo">
+      </div>
+      <div class="modal-actions">
+        <button class="cancel-btn" id="cancelEdit">Cancel</button>
+        <button class="save-btn" id="saveEdit">Update project</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <p>© 2025 Ezeilo David Chisom · fullstack engineer</p>
+      <p><a href="projects.html" style="color: var(--text-secondary);">← back to projects</a></p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    (function() {
+      // ----- DEFAULT PROJECTS (same as before) -----
+      const DEFAULT_PROJECTS = [
+        {
+          id: '1',
+          title: "OmniStore API",
+          description: "High‑performance e‑commerce backend with real‑time inventory updates.",
+          problem: "Monolithic platforms struggle with scale and real‑time sync. Needed a decoupled, event‑driven solution.",
+          tech: ["Node.js", "Express", "PostgreSQL", "Redis", "WebSocket"],
+          architecture: "Modular services: inventory service (Redis pub/sub), order service (ACID), API gateway (rate‑limiting, JWT).",
+          category: "backend",
+          github: "#",
+          demo: "#"
+        },
+        {
+          id: '2',
+          title: "FlowBoard",
+          description: "Collaborative kanban with live cursors and WebSocket sync.",
+          problem: "Remote teams need low‑latency task boards without page reloads.",
+          tech: ["React", "TypeScript", "Fastify", "MongoDB", "Socket.io"],
+          architecture: "Frontend: state machine (xState) + optimistic updates. Backend: horizontal scaling with Redis adapter for Socket.io.",
+          category: "fullstack",
+          github: "#",
+          demo: "#"
+        },
+        {
+          id: '3',
+          title: "EventHub",
+          description: "Microservice orchestrator using Kafka and Go.",
+          problem: "Coordinating distributed transactions without central broker.",
+          tech: ["Go", "Kafka", "gRPC", "Docker", "K8s"],
+          architecture: "Saga pattern + outbox table. Each service publishes events; orchestrator listens and compensates.",
+          category: "backend",
+          github: "#",
+          demo: "#"
+        },
+        {
+          id: '4',
+          title: "Portfolio 2025",
+          description: "This very site — clean, accessible, vanilla.",
+          problem: "Needed a professional portfolio with zero framework fatigue.",
+          tech: ["HTML", "CSS", "JavaScript", "IntersectionObserver"],
+          architecture: "Semantic markup, CSS variables, progressive enhancement. No build step.",
+          category: "frontend",
+          github: "#",
+          demo: "#"
+        },
+        {
+          id: '5',
+          title: "LogMonitor",
+          description: "Real‑time log dashboard with tailing and filters.",
+          problem: "Devs need instant log visibility without SSH.",
+          tech: ["Vue", "Node.js", "SSE", "Tailwind"],
+          architecture: "Server‑sent events from a streaming API; frontend uses virtual scrolling for 10k+ lines.",
+          category: "fullstack",
+          github: "#",
+          demo: "#"
+        },
+        {
+          id: '6',
+          title: "GraphQL Mesh",
+          description: "Unified GraphQL gateway for REST/legacy services.",
+          problem: "Multiple disparate APIs with inconsistent schemas.",
+          tech: ["GraphQL", "Node.js", "Apollo", "REST"],
+          architecture: "Schema stitching + remote executable schemas. Caching layer with response transforms.",
+          category: "backend",
+          github: "#",
+          demo: "#"
+        }
+      ];
+
+      // ----- localStorage helpers -----
+      function getProjects() {
+        const stored = localStorage.getItem('portfolio_projects');
+        if (stored) {
+          try {
+            return JSON.parse(stored);
+          } catch (e) {
+            return DEFAULT_PROJECTS;
+          }
+        } else {
+          localStorage.setItem('portfolio_projects', JSON.stringify(DEFAULT_PROJECTS));
+          return DEFAULT_PROJECTS;
+        }
+      }
+
+      function saveProjects(projects) {
+        localStorage.setItem('portfolio_projects', JSON.stringify(projects));
+      }
+
+      // ----- Admin unlock -----
+      const unlockBtn = document.getElementById('unlockBtn');
+      const passwordWrapper = document.getElementById('passwordWrapper');
+      const adminPanel = document.getElementById('adminPanel');
+
+      if (unlockBtn && passwordWrapper && adminPanel) {
+        unlockBtn.addEventListener('click', () => {
+          const pass = document.getElementById('adminPass').value;
+          if (pass === 'dev123') {
+            passwordWrapper.classList.add('hidden');
+            adminPanel.classList.remove('hidden');
+            loadAdminProjects();
+          } else {
+            alert('Incorrect password');
+          }
+        });
+      }
+
+      // ----- Render project list in admin -----
+      function loadAdminProjects() {
+        const projects = getProjects();
+        renderProjectList(projects);
+
+        // Add project
+        document.getElementById('addProjectBtn').addEventListener('click', () => {
+          const title = document.getElementById('title').value.trim();
+          const desc = document.getElementById('desc').value.trim();
+          const problem = document.getElementById('problem').value.trim();
+          const techStr = document.getElementById('tech').value.trim();
+          const arch = document.getElementById('arch').value.trim();
+          const category = document.getElementById('category').value;
+          let github = document.getElementById('github').value.trim() || '#';
+          let demo = document.getElementById('demo').value.trim() || '#';
+
+          // Auto‑prepend https:// if missing and not a protocol
+          if (github !== '#' && !github.match(/^[a-zA-Z]+:\/\//)) {
+            github = 'https://' + github;
+          }
+          if (demo !== '#' && !demo.match(/^[a-zA-Z]+:\/\//)) {
+            demo = 'https://' + demo;
+          }
+
+          if (!title || !desc || !problem || !techStr || !arch) {
+            alert('Please fill all fields');
+            return;
+          }
+
+          const tech = techStr.split(',').map(s => s.trim()).filter(s => s);
+          const newProject = {
+            id: Date.now().toString(),
+            title,
+            description: desc,
+            problem,
+            tech,
+            architecture: arch,
+            category,
+            github,
+            demo
+          };
+
+          const updated = [...getProjects(), newProject];
+          saveProjects(updated);
+          renderProjectList(updated);
+          // clear form
+          document.getElementById('title').value = '';
+          document.getElementById('desc').value = '';
+          document.getElementById('problem').value = '';
+          document.getElementById('tech').value = '';
+          document.getElementById('arch').value = '';
+          document.getElementById('github').value = '#';
+          document.getElementById('demo').value = '#';
+        });
+
+        // Reset to defaults
+        document.getElementById('resetDefaultsBtn').addEventListener('click', () => {
+          if (confirm('Restore default projects? This will overwrite your current list.')) {
+            saveProjects(DEFAULT_PROJECTS);
+            renderProjectList(DEFAULT_PROJECTS);
+          }
+        });
+      }
+
+      function renderProjectList(projects) {
+        const listDiv = document.getElementById('projectList');
+        listDiv.innerHTML = projects.map(p => `
+          <div class="project-item">
+            <div>
+              <strong style="color:var(--accent);">${escapeHtml(p.title)}</strong> 
+              <span style="color:var(--text-secondary);">(${p.category})</span>
+            </div>
+            <div class="project-actions">
+              <button class="edit-btn" data-id="${p.id}">✎ Edit</button>
+              <button class="delete-btn" data-id="${p.id}">🗑 Delete</button>
+            </div>
+          </div>
+        `).join('');
+
+        // Attach delete events
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const id = e.target.dataset.id;
+            let projects = getProjects();
+            projects = projects.filter(p => p.id !== id);
+            saveProjects(projects);
+            renderProjectList(projects);
+          });
+        });
+
+        // Attach edit events – open modal with project data
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const id = e.target.dataset.id;
+            const projects = getProjects();
+            const project = projects.find(p => p.id === id);
+            if (!project) return;
+
+            // Populate modal fields
+            document.getElementById('edit-title').value = project.title || '';
+            document.getElementById('edit-desc').value = project.description || '';
+            document.getElementById('edit-problem').value = project.problem || '';
+            document.getElementById('edit-tech').value = (project.tech || []).join(', ');
+            document.getElementById('edit-arch').value = project.architecture || '';
+            document.getElementById('edit-category').value = project.category || 'fullstack';
+            document.getElementById('edit-github').value = project.github || '#';
+            document.getElementById('edit-demo').value = project.demo || '#';
+
+            // Store project id in modal's dataset
+            document.getElementById('editModal').dataset.projectId = id;
+            document.getElementById('editModal').classList.add('active');
+          });
+        });
+      }
+
+      // ----- Edit modal save -----
+      document.getElementById('saveEdit').addEventListener('click', () => {
+        const modal = document.getElementById('editModal');
+        const id = modal.dataset.projectId;
+        if (!id) return;
+
+        const projects = getProjects();
+        const index = projects.findIndex(p => p.id === id);
+        if (index === -1) return;
+
+        // Read values from modal
+        const title = document.getElementById('edit-title').value.trim();
+        const desc = document.getElementById('edit-desc').value.trim();
+        const problem = document.getElementById('edit-problem').value.trim();
+        const techStr = document.getElementById('edit-tech').value.trim();
+        const arch = document.getElementById('edit-arch').value.trim();
+        const category = document.getElementById('edit-category').value;
+        let github = document.getElementById('edit-github').value.trim() || '#';
+        let demo = document.getElementById('edit-demo').value.trim() || '#';
+
+        // Auto‑prepend https://
+        if (github !== '#' && !github.match(/^[a-zA-Z]+:\/\//)) {
+          github = 'https://' + github;
+        }
+        if (demo !== '#' && !demo.match(/^[a-zA-Z]+:\/\//)) {
+          demo = 'https://' + demo;
+        }
+
+        if (!title || !desc || !problem || !techStr || !arch) {
+          alert('Please fill all fields');
+          return;
+        }
+
+        const tech = techStr.split(',').map(s => s.trim()).filter(s => s);
+
+        // Update project
+        projects[index] = {
+          ...projects[index],
+          title,
+          description: desc,
+          problem,
+          tech,
+          architecture: arch,
+          category,
+          github,
+          demo
+        };
+
+        saveProjects(projects);
+        renderProjectList(projects);
+        modal.classList.remove('active');
+      });
+
+      // Cancel edit
+      document.getElementById('cancelEdit').addEventListener('click', () => {
+        document.getElementById('editModal').classList.remove('active');
+      });
+
+      // Escape HTML helper (same as before)
+      function escapeHtml(unsafe) {
+        if (!unsafe) return '';
+        return String(unsafe).replace(/[&<>"]/g, function(m) {
+          if (m === '&') return '&amp;';
+          if (m === '<') return '&lt;';
+          if (m === '>') return '&gt;';
+          if (m === '"') return '&quot;';
+          return m;
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

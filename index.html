@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ezeilo David Chisom · fullstack engineer</title>
+  <meta name="description" content="Senior fullstack developer specializing in backend systems, API design, real‑time architectures and clean frontend. View portfolio and projects.">
+  <meta name="keywords" content="fullstack developer, backend, frontend, API, real-time, database, React, Node.js">
+  <meta name="author" content="Ezeilo David Chisom">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text x='0' y='14' font-size='14' fill='%232b6f9b'>⌨️</text></svg>">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="index.html" class="logo">EZEILO DAVID</a>
+      <nav class="main-nav">
+        <ul>
+          <li><a href="index.html" class="nav-link active">Home</a></li>
+          <li><a href="projects.html" class="nav-link">Projects</a></li>
+          <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="home" class="hero section">
+      <div class="container">
+        <h1 class="hero-name">Ezeilo David Chisom</h1>
+        <div class="hero-role">
+          <span class="static-prefix">I'm a </span>
+          <span class="typed-role"></span><span class="cursor">|</span>
+        </div>
+        <p class="hero-tagline">Crafting resilient backend services, clean APIs, and fluid frontend experiences.</p>
+        <a href="projects.html" class="btn btn-primary">View my projects →</a>
+      </div>
+    </section>
+
+    <section id="about" class="about section fade-in">
+      <div class="container">
+        <h2 class="section-title">About me</h2>
+        <div class="about-card">
+          <p class="about-text">
+            I design and build fullstack systems that scale. With a deep focus on backend architecture, I develop RESTful and real‑time APIs, optimize database performance, and construct frontend interfaces that feel invisible — because great UI is about clarity, not decoration. I thrive on turning complex requirements into clean, maintainable code. Whether it's microservices, event‑driven flows, or responsive component libraries, I bring a mature engineering mindset.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills" class="skills section fade-in">
+      <div class="container">
+        <h2 class="section-title">Technical expertise</h2>
+        <div class="skills-grid">
+          <div class="skill-card">
+            <h3 class="skill-category">Frontend</h3>
+            <ul class="skill-list">
+              <li>React / Next.js</li>
+              <li>TypeScript</li>
+              <li>Vue / Svelte</li>
+              <li>Tailwind / SCSS</li>
+              <li>Web accessibility</li>
+            </ul>
+          </div>
+          <div class="skill-card">
+            <h3 class="skill-category">Backend</h3>
+            <ul class="skill-list">
+              <li>Node.js (Express, Fastify)</li>
+              <li>Python (Django, FastAPI)</li>
+              <li>Go (Gorilla, Chi)</li>
+              <li>PostgreSQL / MongoDB</li>
+              <li>Redis / RabbitMQ</li>
+            </ul>
+          </div>
+          <div class="skill-card">
+            <h3 class="skill-category">Tools & DevOps</h3>
+            <ul class="skill-list">
+              <li>Docker / Kubernetes</li>
+              <li>CI/CD (GitHub Actions)</li>
+              <li>AWS (EC2, Lambda)</li>
+              <li>Git / monorepos</li>
+              <li>Prometheus / Grafana</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="featured-projects" class="featured section fade-in">
+      <div class="container">
+        <h2 class="section-title">Featured projects</h2>
+        <div class="projects-grid featured-grid" id="featured-projects-grid">
+          <!-- filled by js with first 3 projects -->
+        </div>
+      </div>
+    </section>
+
+<section id="contact" class="contact section fade-in">
+  <div class="container">
+    <h2 class="section-title">Let’s work together</h2>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <p class="contact-email"><span class="contact-label">Email</span> david.ezeilo@proton.me</p>
+        <p class="contact-github"><span class="contact-label">GitHub</span> /ezeilo-david</p>
+        <p class="contact-linkedin"><span class="contact-label">LinkedIn</span> in/ezeilo-david</p>
+      </div>
+      <form class="contact-form" id="contact-form" action="https://formsubmit.co/ezeilodavid292@gmail.com" method="POST">
+        <!-- Honeypot to prevent spam (optional) -->
+        <input type="text" name="_honey" style="display:none">
+        <!-- Disable captcha -->
+        <input type="hidden" name="_captcha" value="false">
+        <!-- Optional: redirect after submission -->
+        <!-- <input type="hidden" name="_next" value="https://yourdomain.com/thanks.html"> -->
+
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder=" " required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder=" " required>
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="3" placeholder=" " required></textarea>
+        </div>
+        <button type="submit" class="btn btn-secondary">Send message →</button>
+        <div id="form-status" style="margin-top: 1rem; color: var(--accent);"></div>
+      </form>
+    </div>
+  </div>
+</section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <p>© 2025 Ezeilo David Chisom · fullstack engineer</p>
+      <p><a href="admin.html" class="admin-link" style="color: var(--text-secondary); text-decoration: none; border-bottom: 1px dashed var(--border-light);">⚙️ admin</a></p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
