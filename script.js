@@ -173,7 +173,7 @@ if (contactForm) {
           </div>
           <p class="project-arch"><strong>Architecture:</strong> ${p.architecture}</p>
           <div class="project-links" style="margin-top: 16px; display: flex; gap: 24px;">
-            <a href="${p.github}" class="card-link" target="_blank" rel="noopener">GitHub →</a>
+            <a href="${p.github}" class="card-link" target="_blank" rel="noopener">See Project →</a>
             <a href="${p.demo}" class="card-link" target="_blank" rel="noopener">Live demo →</a>
           </div>
         </article>
@@ -313,3 +313,4 @@ if (contactForm) {
   }
 
 })();
+
