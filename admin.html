@@ -4,111 +4,213 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin · manage projects</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&display=swap" rel="stylesheet">
   <style>
-    /* small tweaks for admin forms (keep existing, add these) */
-    .admin-section { max-width: 800px; margin: 0 auto; }
+    /* Admin-specific styles (complements style.css) */
+    .admin-section {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .password-prompt {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      max-width: 400px;
+      margin: 3rem auto;
+    }
+
     .admin-form {
       background: var(--bg-card);
-      padding: var(--space-md);
-      border-radius: var(--rounded);
       border: 1px solid var(--border-light);
-      margin-bottom: var(--space-lg);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
     }
-    .form-row { margin-bottom: 16px; }
+
+    .form-row {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
     .form-row label {
       display: block;
-      margin-bottom: 6px;
+      margin-bottom: 0.5rem;
       color: var(--accent);
-      font-weight: 400;
+      font-weight: 500;
+      font-size: 0.9rem;
     }
+
     .form-row input,
     .form-row textarea,
     .form-row select {
       width: 100%;
-      background: #1a2938;
+      background: var(--bg-secondary);
       border: 1px solid var(--border-light);
-      border-radius: var(--rounded-sm);
-      padding: 12px;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
       color: var(--text-primary);
       font-family: inherit;
+      font-size: 1rem;
+      transition: var(--transition);
     }
+
     .form-row input:focus,
     .form-row textarea:focus,
     .form-row select:focus {
       border-color: var(--accent);
       outline: none;
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
     }
+
+    .project-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
     .project-item {
-      background: var(--bg-secondary);
-      border-radius: var(--rounded-sm);
-      padding: 16px;
-      margin-bottom: 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      padding: 1.25rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      transition: var(--transition);
     }
+
+    .project-item:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .project-info h4 {
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+      color: var(--text-primary);
+    }
+
+    .project-info span {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      background: var(--bg-secondary);
+      padding: 0.2rem 0.75rem;
+      border-radius: 30px;
+      border: 1px solid var(--border-light);
+    }
+
+    .project-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
     .project-actions button {
       background: transparent;
       border: 1px solid var(--border-light);
       color: var(--text-secondary);
-      padding: 6px 12px;
-      border-radius: 30px;
-      margin-left: 8px;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
-      transition: 0.2s;
+      transition: var(--transition);
+      font-size: 1rem;
     }
+
     .project-actions button:hover {
       border-color: var(--accent);
       color: var(--accent);
+      background: rgba(59,130,246,0.1);
     }
-    .password-prompt {
-      background: var(--bg-card);
-      padding: var(--space-md);
-      border-radius: var(--rounded);
-      text-align: center;
-      max-width: 400px;
-      margin: 40px auto;
-    }
-    .hidden { display: none; }
 
-    /* Modal for editing */
+    .project-actions .delete-btn:hover {
+      border-color: #ef4444;
+      color: #ef4444;
+    }
+
+    /* Modal */
     .modal {
       display: none;
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
       background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(4px);
       align-items: center;
       justify-content: center;
       z-index: 1000;
     }
-    .modal.active { display: flex; }
+
+    .modal.active {
+      display: flex;
+    }
+
     .modal-content {
       background: var(--bg-card);
       border: 1px solid var(--accent);
-      border-radius: var(--rounded);
-      padding: var(--space-md);
+      border-radius: 20px;
+      padding: 2rem;
       max-width: 600px;
       width: 90%;
       max-height: 90vh;
       overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
     }
+
     .modal-actions {
       display: flex;
       justify-content: flex-end;
-      gap: 12px;
-      margin-top: 20px;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .cancel-btn {
+      background: transparent;
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      padding: 0.75rem 1.5rem;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .cancel-btn:hover {
+      border-color: var(--text-secondary);
+    }
+
+    .save-btn {
+      background: var(--accent);
+      border: none;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .save-btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
   <header class="site-header">
     <div class="container nav-container">
-      <a href="index.html" class="logo">EZEILO DAVID</a>
+      <a href="index.html" class="logo">Ezeilo David</a>
       <nav class="main-nav">
         <ul>
           <li><a href="index.html" class="nav-link">Home</a></li>
@@ -122,18 +224,21 @@
   <main class="container admin-section">
     <h1 class="section-title">Project admin</h1>
 
-    <!-- simple password protection -->
+    <!-- Password protection -->
     <div id="passwordWrapper" class="password-prompt">
-      <p style="margin-bottom: 16px;">Enter admin password:</p>
-      <input type="password" id="adminPass" style="width:100%; padding:10px; background:#1a2938; border:1px solid var(--border-light); border-radius:30px; color:white;">
-      <button id="unlockBtn" class="btn btn-secondary" style="margin-top:16px;">Unlock</button>
-      <p style="margin-top:12px; font-size:0.9rem; color:var(--text-secondary)"></p>
+      <i class="fas fa-lock" style="font-size: 2rem; color: var(--accent); margin-bottom: 1rem;"></i>
+      <p style="margin-bottom: 1.5rem;">Enter admin password to continue</p>
+      <input type="password" id="adminPass" placeholder="••••••••" style="width:100%; padding:0.75rem; background:var(--bg-secondary); border:1px solid var(--border-light); border-radius:30px; color:white; text-align:center;">
+      <button id="unlockBtn" class="btn btn-primary" style="margin-top:1.5rem; width:100%;">Unlock</button>
     </div>
 
+    <!-- Admin panel (hidden until unlocked) -->
     <div id="adminPanel" class="hidden">
-      <!-- Add new project form (always visible) -->
+      <!-- Add new project form -->
       <div class="admin-form">
-        <h3 style="margin-bottom: 16px;">➕ Add new project</h3>
+        <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          <i class="fas fa-plus-circle" style="color: var(--accent);"></i> Add new project
+        </h3>
         <div class="form-row">
           <label>Title</label>
           <input type="text" id="title" placeholder="e.g. OmniStore API">
@@ -144,7 +249,7 @@
         </div>
         <div class="form-row">
           <label>Problem it solved</label>
-          <textarea id="problem" rows="2"></textarea>
+          <textarea id="problem" rows="2" placeholder="What challenge did it address?"></textarea>
         </div>
         <div class="form-row">
           <label>Tech stack (comma separated)</label>
@@ -152,7 +257,7 @@
         </div>
         <div class="form-row">
           <label>Architecture explanation</label>
-          <textarea id="arch" rows="2"></textarea>
+          <textarea id="arch" rows="2" placeholder="Key design decisions..."></textarea>
         </div>
         <div class="form-row">
           <label>Category</label>
@@ -163,26 +268,35 @@
           </select>
         </div>
         <div class="form-row">
-          <label>GitHub link (placeholder)</label>
-          <input type="text" id="github" value="#">
+          <label>GitHub link</label>
+          <input type="text" id="github" value="#" placeholder="https://github.com/...">
         </div>
         <div class="form-row">
-          <label>Live demo link (placeholder)</label>
-          <input type="text" id="demo" value="#">
+          <label>Live demo link</label>
+          <input type="text" id="demo" value="#" placeholder="https://...">
         </div>
         <button id="addProjectBtn" class="btn btn-primary">Add project</button>
+        <span id="adminFormStatus" style="margin-left: 1rem; color: var(--accent);"></span>
       </div>
 
-      <h3 style="margin: 32px 0 16px;">📋 Existing projects</h3>
-      <div id="projectList"></div>
-      <button id="resetDefaultsBtn" class="btn btn-secondary" style="margin-top:24px;">Reset to default projects</button>
+      <!-- Existing projects list -->
+      <h3 style="margin: 2rem 0 1rem; display: flex; align-items: center; gap: 0.5rem;">
+        <i class="fas fa-list" style="color: var(--accent);"></i> Existing projects
+      </h3>
+      <div id="projectList" class="project-list"></div>
+
+      <button id="resetDefaultsBtn" class="btn btn-secondary" style="margin-top: 2rem;">
+        <i class="fas fa-undo-alt"></i> Reset to default projects
+      </button>
     </div>
   </main>
 
-  <!-- EDIT MODAL -->
+  <!-- Edit Modal -->
   <div class="modal" id="editModal">
     <div class="modal-content">
-      <h3 style="margin-bottom: 16px;">✏️ Edit project</h3>
+      <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+        <i class="fas fa-edit" style="color: var(--accent);"></i> Edit project
+      </h3>
       <div class="form-row">
         <label>Title</label>
         <input type="text" id="edit-title">
@@ -229,50 +343,51 @@
   <footer class="site-footer">
     <div class="container footer-container">
       <p>© 2025 Ezeilo David Chisom · fullstack engineer</p>
-      <p><a href="projects.html" style="color: var(--text-secondary);">← back to projects</a></p>
+      <div class="footer-links">
+        <a href="https://github.com/efgfdsdfdf" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+        <a href="projects.html" aria-label="Back to projects"><i class="fas fa-arrow-left"></i></a>
+      </div>
     </div>
   </footer>
 
-  <script src="script.js"></script>
   <script>
     (function() {
-      // ----- DEFAULT PROJECTS (same as before) -----
+      // ----- DEFAULT PROJECTS (normalized categories, no empty tech) -----
       const DEFAULT_PROJECTS = [
         {
           id: '1',
           title: "ACE-Student Companion",
-          description: "High‑performance Student Assistant with real‑time inventory updates And an in built AI (ACE-AI).",
+          description: "High‑performance Student Assistant with real‑time inventory updates and an in‑built AI (ACE-AI).",
           problem: "Monolithic platforms struggle with scale and real‑time sync. Needed a decoupled, event‑driven solution.",
-          tech: ["HTML", "CSS", "JAVASCRIPT", "Node.js", ""],
+          tech: ["HTML", "CSS", "JAVASCRIPT", "Node.js"],
           architecture: "Modular services: inventory service (Redis pub/sub), order service (ACID), API gateway (rate‑limiting, JWT).",
-          category: "FULLSTACK",
+          category: "fullstack",
           github: "https://efgfdsdfdf.github.io/edutrack/",
           demo: "https://edutrack-rust.vercel.app/"
         },
         {
           id: '2',
           title: "TECHTITANS",
-          description: "AN internal system for a Company called TECHTITANS, where they have group Discussions and direct messages based on their roles, .",
+          description: "An internal system for a company called TECHTITANS, with group discussions and direct messages based on roles.",
           problem: "Remote teams need low‑latency task boards without page reloads.",
           tech: ["React", "TypeScript", "Fastify", "MongoDB", "Socket.io"],
-          architecture: "Frontend: state machine (xState) + optimistic updates. Backend: horizontal scaling with Redis adapter for Socket.i",
-          category: "Backend",
+          architecture: "Frontend: state machine (xState) + optimistic updates. Backend: horizontal scaling with Redis adapter for Socket.io",
+          category: "backend",
           github: "https://efgfdsdfdf.github.io/TECHTITANS/",
           demo: "https://efgfdsdfdf.github.io/TECHTITANS/"
         },
         {
           id: '3',
           title: "ZED",
-          description: "ZED is an AI-powered health assistant app that helps users analyze symptoms, track vital signs, and receive intelligent health insights in real time. It securely collects user health data and uses AI to provide personalized guidance and early health awareness, helping users understand their condition and decide when to seek professional medical care. 🔐🩺.",
-          problem: "Problem ZED Is Solving Many people don’t understand their health symptoms or body signals, and getting quick medical guidance is often slow, expensive, or inaccessible. People may ignore symptoms, panic unnecessarily, or search unreliable information online. ZED solves this problem by providing an AI-powered health assistant that helps users analyze symptoms, track vital signs, and receive instant health insights, allowing them to make informed decisions about their health earlier and more easily. 🩺📱",
+          description: "ZED is an AI-powered health assistant app that helps users analyze symptoms, track vital signs, and receive intelligent health insights in real time.",
+          problem: "Many people don’t understand their health symptoms. ZED provides AI‑powered analysis, vital tracking, and encrypted storage for early health awareness.",
           tech: ["React", "TypeScript", "Fastify", "MongoDB", "Socket.io"],
-          architecture: "User → Encrypt → Backend → AI Analysis → Encrypted Storage → User Dashboard This gives a full end-to-end encrypted health monitoring and AI analysis system.",
+          architecture: "User → Encrypt → Backend → AI Analysis → Encrypted Storage → User Dashboard. Full end‑to‑end encrypted health monitoring.",
           category: "fullstack",
           github: "https://efgfdsdfdf.github.io/ZED/",
           demo: "https://efgfdsdfdf.github.io/ZED/"
-        },
-        
-
+        }
       ];
 
       // ----- localStorage helpers -----
@@ -294,15 +409,43 @@
         localStorage.setItem('portfolio_projects', JSON.stringify(projects));
       }
 
+      // ----- Helper: generate unique ID -----
+      function generateId() {
+        return (window.crypto && window.crypto.randomUUID) 
+          ? crypto.randomUUID() 
+          : Date.now().toString(36) + Math.random().toString(36).substring(2);
+      }
+
+      // ----- Helper: auto‑prepend https:// -----
+      function normalizeUrl(url) {
+        if (!url || url === '#') return '#';
+        if (!url.match(/^[a-zA-Z]+:\/\//)) {
+          return 'https://' + url;
+        }
+        return url;
+      }
+
+      // ----- Helper: escape HTML (prevent XSS) -----
+      function escapeHtml(unsafe) {
+        if (!unsafe) return '';
+        return String(unsafe)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
       // ----- Admin unlock -----
       const unlockBtn = document.getElementById('unlockBtn');
       const passwordWrapper = document.getElementById('passwordWrapper');
       const adminPanel = document.getElementById('adminPanel');
+      let editingId = null; // Track which project is being edited
 
       if (unlockBtn && passwordWrapper && adminPanel) {
         unlockBtn.addEventListener('click', () => {
           const pass = document.getElementById('adminPass').value;
-          if (pass === 'dev123') {
+          if (pass === 'dev123') { // Change this in production
             passwordWrapper.classList.add('hidden');
             adminPanel.classList.remove('hidden');
             loadAdminProjects();
@@ -312,12 +455,12 @@
         });
       }
 
-      // ----- Render project list in admin -----
+      // ----- Load admin interface -----
       function loadAdminProjects() {
         const projects = getProjects();
         renderProjectList(projects);
 
-        // Add project
+        // Add project button
         document.getElementById('addProjectBtn').addEventListener('click', () => {
           const title = document.getElementById('title').value.trim();
           const desc = document.getElementById('desc').value.trim();
@@ -328,22 +471,17 @@
           let github = document.getElementById('github').value.trim() || '#';
           let demo = document.getElementById('demo').value.trim() || '#';
 
-          // Auto‑prepend https:// if missing and not a protocol
-          if (github !== '#' && !github.match(/^[a-zA-Z]+:\/\//)) {
-            github = 'https://' + github;
-          }
-          if (demo !== '#' && !demo.match(/^[a-zA-Z]+:\/\//)) {
-            demo = 'https://' + demo;
-          }
-
           if (!title || !desc || !problem || !techStr || !arch) {
             alert('Please fill all fields');
             return;
           }
 
+          github = normalizeUrl(github);
+          demo = normalizeUrl(demo);
           const tech = techStr.split(',').map(s => s.trim()).filter(s => s);
+
           const newProject = {
-            id: Date.now().toString(),
+            id: generateId(),
             title,
             description: desc,
             problem,
@@ -357,14 +495,9 @@
           const updated = [...getProjects(), newProject];
           saveProjects(updated);
           renderProjectList(updated);
-          // clear form
-          document.getElementById('title').value = '';
-          document.getElementById('desc').value = '';
-          document.getElementById('problem').value = '';
-          document.getElementById('tech').value = '';
-          document.getElementById('arch').value = '';
-          document.getElementById('github').value = '#';
-          document.getElementById('demo').value = '#';
+          clearAddForm();
+          document.getElementById('adminFormStatus').textContent = '✅ Project added';
+          setTimeout(() => document.getElementById('adminFormStatus').textContent = '', 3000);
         });
 
         // Reset to defaults
@@ -376,68 +509,88 @@
         });
       }
 
+      // ----- Render project list -----
       function renderProjectList(projects) {
         const listDiv = document.getElementById('projectList');
         listDiv.innerHTML = projects.map(p => `
-          <div class="project-item">
-            <div>
-              <strong style="color:var(--accent);">${escapeHtml(p.title)}</strong> 
-              <span style="color:var(--text-secondary);">(${p.category})</span>
+          <div class="project-item" data-id="${escapeHtml(p.id)}">
+            <div class="project-info">
+              <h4>${escapeHtml(p.title)}</h4>
+              <span>${escapeHtml(p.category)}</span>
             </div>
             <div class="project-actions">
-              <button class="edit-btn" data-id="${p.id}">✎ Edit</button>
-              <button class="delete-btn" data-id="${p.id}">🗑 Delete</button>
+              <button class="edit-btn" data-id="${escapeHtml(p.id)}" title="Edit"><i class="fas fa-edit"></i></button>
+              <button class="delete-btn" data-id="${escapeHtml(p.id)}" title="Delete"><i class="fas fa-trash-alt"></i></button>
             </div>
           </div>
         `).join('');
 
-        // Attach delete events
+        // Delete handlers
         document.querySelectorAll('.delete-btn').forEach(btn => {
           btn.addEventListener('click', (e) => {
-            const id = e.target.dataset.id;
+            const id = e.currentTarget.dataset.id;
             let projects = getProjects();
             projects = projects.filter(p => p.id !== id);
             saveProjects(projects);
             renderProjectList(projects);
+            if (editingId === id) {
+              closeModal();
+            }
           });
         });
 
-        // Attach edit events – open modal with project data
+        // Edit handlers - open modal
         document.querySelectorAll('.edit-btn').forEach(btn => {
           btn.addEventListener('click', (e) => {
-            const id = e.target.dataset.id;
+            const id = e.currentTarget.dataset.id;
             const projects = getProjects();
             const project = projects.find(p => p.id === id);
-            if (!project) return;
-
-            // Populate modal fields
-            document.getElementById('edit-title').value = project.title || '';
-            document.getElementById('edit-desc').value = project.description || '';
-            document.getElementById('edit-problem').value = project.problem || '';
-            document.getElementById('edit-tech').value = (project.tech || []).join(', ');
-            document.getElementById('edit-arch').value = project.architecture || '';
-            document.getElementById('edit-category').value = project.category || 'fullstack';
-            document.getElementById('edit-github').value = project.github || '#';
-            document.getElementById('edit-demo').value = project.demo || '#';
-
-            // Store project id in modal's dataset
-            document.getElementById('editModal').dataset.projectId = id;
-            document.getElementById('editModal').classList.add('active');
+            if (project) {
+              openEditModal(project);
+            }
           });
         });
       }
 
-      // ----- Edit modal save -----
+      // ----- Open modal with project data -----
+      function openEditModal(project) {
+        document.getElementById('edit-title').value = project.title || '';
+        document.getElementById('edit-desc').value = project.description || '';
+        document.getElementById('edit-problem').value = project.problem || '';
+        document.getElementById('edit-tech').value = (project.tech || []).join(', ');
+        document.getElementById('edit-arch').value = project.architecture || '';
+        document.getElementById('edit-category').value = project.category || 'fullstack';
+        document.getElementById('edit-github').value = project.github || '#';
+        document.getElementById('edit-demo').value = project.demo || '#';
+        editingId = project.id;
+        document.getElementById('editModal').classList.add('active');
+      }
+
+      // ----- Close modal -----
+      function closeModal() {
+        document.getElementById('editModal').classList.remove('active');
+        editingId = null;
+      }
+
+      // ----- Clear add form -----
+      function clearAddForm() {
+        document.getElementById('title').value = '';
+        document.getElementById('desc').value = '';
+        document.getElementById('problem').value = '';
+        document.getElementById('tech').value = '';
+        document.getElementById('arch').value = '';
+        document.getElementById('github').value = '#';
+        document.getElementById('demo').value = '#';
+      }
+
+      // ----- Save edit from modal -----
       document.getElementById('saveEdit').addEventListener('click', () => {
-        const modal = document.getElementById('editModal');
-        const id = modal.dataset.projectId;
-        if (!id) return;
+        if (!editingId) return;
 
         const projects = getProjects();
-        const index = projects.findIndex(p => p.id === id);
+        const index = projects.findIndex(p => p.id === editingId);
         if (index === -1) return;
 
-        // Read values from modal
         const title = document.getElementById('edit-title').value.trim();
         const desc = document.getElementById('edit-desc').value.trim();
         const problem = document.getElementById('edit-problem').value.trim();
@@ -447,22 +600,15 @@
         let github = document.getElementById('edit-github').value.trim() || '#';
         let demo = document.getElementById('edit-demo').value.trim() || '#';
 
-        // Auto‑prepend https://
-        if (github !== '#' && !github.match(/^[a-zA-Z]+:\/\//)) {
-          github = 'https://' + github;
-        }
-        if (demo !== '#' && !demo.match(/^[a-zA-Z]+:\/\//)) {
-          demo = 'https://' + demo;
-        }
-
         if (!title || !desc || !problem || !techStr || !arch) {
           alert('Please fill all fields');
           return;
         }
 
+        github = normalizeUrl(github);
+        demo = normalizeUrl(demo);
         const tech = techStr.split(',').map(s => s.trim()).filter(s => s);
 
-        // Update project
         projects[index] = {
           ...projects[index],
           title,
@@ -477,28 +623,19 @@
 
         saveProjects(projects);
         renderProjectList(projects);
-        modal.classList.remove('active');
+        closeModal();
       });
 
-      // Cancel edit
-      document.getElementById('cancelEdit').addEventListener('click', () => {
-        document.getElementById('editModal').classList.remove('active');
-      });
+      // ----- Cancel edit -----
+      document.getElementById('cancelEdit').addEventListener('click', closeModal);
 
-      // Escape HTML helper (same as before)
-      function escapeHtml(unsafe) {
-        if (!unsafe) return '';
-        return String(unsafe).replace(/[&<>"]/g, function(m) {
-          if (m === '&') return '&amp;';
-          if (m === '<') return '&lt;';
-          if (m === '>') return '&gt;';
-          if (m === '"') return '&quot;';
-          return m;
-        });
-      }
+      // ----- Click outside modal to close (optional) -----
+      document.getElementById('editModal').addEventListener('click', (e) => {
+        if (e.target === document.getElementById('editModal')) {
+          closeModal();
+        }
+      });
     })();
   </script>
 </body>
-
 </html>
-
