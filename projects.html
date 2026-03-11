@@ -12,6 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&display=swap" rel="stylesheet">
+  <!-- Your provided styles (already in style.css but included here for completeness) -->
   <style>
     /* Compact project card styles */
     .projects-grid {
@@ -296,7 +297,127 @@
 
   <!-- Supabase client library -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <!-- Your main script (handles rendering and modal) -->
-  <script src="script.js"></script>
+
+  <script>
+    (function() {
+      // ----- SUPABASE INITIALIZATION -----
+      const SUPABASE_URL = 'https://qrfgrfflkpudefcsbndn.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyZmdyZmZsa3B1ZGVmY3NibmRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMzE0NDQsImV4cCI6MjA4ODgwNzQ0NH0.CzTNuVWK2d9cwvAqSfE4IT2j3N14DORnpCqL__Z-Gdw';
+
+      const { createClient } = supabase;
+      const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      // ----- Helper: escape HTML -----
+      function escapeHtml(unsafe) {
+        if (!unsafe) return '';
+        return String(unsafe)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      // ----- Render compact project cards -----
+      const projectsGrid = document.getElementById('projects-grid');
+      let allProjects = []; // cache for modal lookup
+
+      async function loadProjects(filter = 'all') {
+        try {
+          let query = supabaseClient.from('projects').select('*');
+          if (filter !== 'all') {
+            query = query.eq('category', filter.toLowerCase());
+          }
+          const { data: projects, error } = await query;
+          if (error) throw error;
+
+          allProjects = projects;
+          renderProjects(projects);
+        } catch (e) {
+          console.error('Error loading projects:', e);
+          projectsGrid.innerHTML = '<p style="color:var(--text-secondary); grid-column:1/-1; text-align:center;">Error loading projects.</p>';
+        }
+      }
+
+      function renderProjects(projects) {
+        if (projects.length === 0) {
+          projectsGrid.innerHTML = '<p style="color:var(--text-secondary); grid-column:1/-1; text-align:center;">No projects in this category.</p>';
+          return;
+        }
+
+        const html = projects.map(p => `
+          <article class="project-card compact" data-id="${escapeHtml(p.id)}">
+            <h3 class="project-title">${escapeHtml(p.title)}</h3>
+            <p class="project-desc">${escapeHtml(p.description)}</p>
+            <div class="project-tech">
+              ${p.tech.filter(t => t.trim()).map(t => `<span>${escapeHtml(t)}</span>`).join('')}
+            </div>
+            <div class="project-actions">
+              <button class="btn-small about-btn" data-id="${escapeHtml(p.id)}">
+                <i class="fas fa-info-circle"></i> About
+              </button>
+              <a href="${escapeHtml(p.demo)}" class="btn-small" target="_blank" rel="noopener">
+                <i class="fas fa-external-link-alt"></i> Live Demo
+              </a>
+            </div>
+          </article>
+        `).join('');
+
+        projectsGrid.innerHTML = html;
+
+        // Attach About button listeners
+        document.querySelectorAll('.about-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const id = e.currentTarget.dataset.id;
+            const project = allProjects.find(p => p.id === id);
+            if (project) showModal(project);
+          });
+        });
+      }
+
+      // ----- Modal functions -----
+      const modal = document.getElementById('projectModal');
+      const closeModal = document.getElementById('closeModal');
+
+      function showModal(project) {
+        document.getElementById('modalTitle').textContent = project.title;
+        document.getElementById('modalDescription').textContent = project.description;
+        document.getElementById('modalProblem').textContent = project.problem;
+        document.getElementById('modalArchitecture').textContent = project.architecture;
+        
+        const techContainer = document.getElementById('modalTech');
+        techContainer.innerHTML = project.tech.map(t => `<span>${escapeHtml(t)}</span>`).join('');
+        
+        document.getElementById('modalGithub').href = project.github;
+        document.getElementById('modalDemo').href = project.demo;
+        
+        modal.classList.add('active');
+      }
+
+      closeModal.addEventListener('click', () => {
+        modal.classList.remove('active');
+      });
+
+      // Click outside to close
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.classList.remove('active');
+        }
+      });
+
+      // Filter buttons
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          loadProjects(btn.dataset.filter);
+        });
+      });
+
+      // Initial load
+      loadProjects('all');
+    })();
+  </script>
 </body>
 </html>
