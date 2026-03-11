@@ -1,14 +1,21 @@
 // ===== script.js =====
-// typing animation, scroll fade, projects + admin (Supabase)
+// typing animation, scroll fade, projects + admin (Supabase) – robust version
 
 (function() {
-  // ----- SUPABASE INITIALIZATION -----
-  // Replace with your Supabase project URL and anon key
-  const SUPABASE_URL = 'https://qrfgrfflkpudefcsbndn.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyZmdyZmZsa3B1ZGVmY3NibmRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMzE0NDQsImV4cCI6MjA4ODgwNzQ0NH0.CzTNuVWK2d9cwvAqSfE4IT2j3N14DORnpCqL__Z-Gdw';
-
-  const { createClient } = supabase;
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  // ----- SUPABASE INITIALIZATION (with error handling) -----
+  let supabase = null;
+  try {
+    if (typeof supabase === 'undefined' || !supabase.createClient) {
+      console.warn('Supabase library not loaded. Supabase features disabled.');
+    } else {
+      const SUPABASE_URL = 'https://qrfgrfflkpudefcsbndn.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyZmdyZmZsa3B1ZGVmY3NibmRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMzE0NDQsImV4cCI6MjA4ODgwNzQ0NH0.CzTNuVWK2d9cwvAqSfE4IT2j3N14DORnpCqL__Z-Gdw';
+      supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      console.log('Supabase initialized successfully.');
+    }
+  } catch (e) {
+    console.error('Failed to initialize Supabase:', e);
+  }
 
   // ----- DEFAULT PROJECTS (used only for seeding) -----
   const DEFAULT_PROJECTS = [
@@ -44,24 +51,29 @@
     }
   ];
 
-  // ----- HELPER: Seed database if empty -----
+  // ----- HELPER: Seed database if empty (only if supabase available) -----
   async function seedIfEmpty() {
-    const { data, error } = await supabase.from('projects').select('*', { count: 'exact', head: true });
-    if (error) {
-      console.error('Error checking projects:', error);
-      return;
-    }
-    if (data.length === 0) {
-      console.log('Seeding default projects...');
-      const { error: insertError } = await supabase.from('projects').insert(DEFAULT_PROJECTS);
-      if (insertError) console.error('Seeding failed:', insertError);
+    if (!supabase) return;
+    try {
+      const { count, error } = await supabase
+        .from('projects')
+        .select('*', { count: 'exact', head: true });
+      if (error) throw error;
+      if (count === 0) {
+        console.log('Seeding default projects...');
+        const { error: insertError } = await supabase.from('projects').insert(DEFAULT_PROJECTS);
+        if (insertError) throw insertError;
+        console.log('Seeding successful.');
+      }
+    } catch (e) {
+      console.error('Seeding failed:', e);
     }
   }
 
-  // Call seeding on load
-  seedIfEmpty();
+  // Call seeding on load (non-blocking)
+  if (supabase) seedIfEmpty();
 
-  // ----- TYPING ANIMATION (unchanged) -----
+  // ----- TYPING ANIMATION (always works) -----
   const typedElement = document.querySelector('.typed-role');
   if (typedElement) {
     const phrases = [
@@ -103,7 +115,7 @@
     type();
   }
 
-  // ----- FADE-IN ON SCROLL (unchanged) -----
+  // ----- FADE-IN ON SCROLL (always works) -----
   const fadeElements = document.querySelectorAll('.fade-in');
   if (fadeElements.length) {
     const observer = new IntersectionObserver((entries) => {
@@ -114,7 +126,7 @@
     fadeElements.forEach(el => observer.observe(el));
   }
 
-  // ----- CONTACT FORM (unchanged) -----
+  // ----- CONTACT FORM (always works) -----
   const contactForm = document.getElementById('contact-form');
   if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
@@ -151,279 +163,296 @@
     });
   }
 
-  // ----- RENDER FEATURED PROJECTS (index.html) -----
+  // ----- RENDER FEATURED PROJECTS (index.html) – only if supabase available -----
   const featuredGrid = document.getElementById('featured-projects-grid');
   if (featuredGrid) {
-    async function loadFeatured() {
-      const { data: projects, error } = await supabase
-        .from('projects')
-        .select('*')
-        .limit(3);
-      if (error) {
-        console.error('Error loading featured projects:', error);
-        return;
+    if (!supabase) {
+      featuredGrid.innerHTML = '<p style="color:var(--text-secondary);">Supabase not available. Please check console.</p>';
+    } else {
+      async function loadFeatured() {
+        try {
+          const { data: projects, error } = await supabase
+            .from('projects')
+            .select('*')
+            .limit(3);
+          if (error) throw error;
+          featuredGrid.innerHTML = projects.map(p => `
+            <article class="project-card">
+              <h3 class="project-title">${escapeHtml(p.title)}</h3>
+              <p class="project-desc">${escapeHtml(p.description)}</p>
+              <div class="project-tech">
+                ${p.tech.filter(t => t.trim()).map(t => `<span>${escapeHtml(t)}</span>`).join('')}
+              </div>
+              <a href="projects.html" class="card-link">View details →</a>
+            </article>
+          `).join('');
+        } catch (e) {
+          console.error('Error loading featured projects:', e);
+          featuredGrid.innerHTML = '<p style="color:var(--text-secondary);">Error loading projects.</p>';
+        }
       }
-      featuredGrid.innerHTML = projects.map(p => `
-        <article class="project-card">
-          <h3 class="project-title">${escapeHtml(p.title)}</h3>
-          <p class="project-desc">${escapeHtml(p.description)}</p>
-          <div class="project-tech">
-            ${p.tech.filter(t => t.trim()).map(t => `<span>${escapeHtml(t)}</span>`).join('')}
-          </div>
-          <a href="projects.html" class="card-link">View details →</a>
-        </article>
-      `).join('');
+      loadFeatured();
     }
-    loadFeatured();
   }
 
-  // ----- PROJECTS PAGE: render with filter (case‑insensitive) -----
+  // ----- PROJECTS PAGE: render with filter – only if supabase available -----
   const projectsGrid = document.getElementById('projects-grid');
   if (projectsGrid) {
-    async function renderProjects(filter = 'all') {
-      let query = supabase.from('projects').select('*');
-      if (filter !== 'all') {
-        query = query.eq('category', filter.toLowerCase());
+    if (!supabase) {
+      projectsGrid.innerHTML = '<p style="color:var(--text-secondary);">Supabase not available. Please check console.</p>';
+    } else {
+      async function renderProjects(filter = 'all') {
+        try {
+          let query = supabase.from('projects').select('*');
+          if (filter !== 'all') {
+            query = query.eq('category', filter.toLowerCase());
+          }
+          const { data: projects, error } = await query;
+          if (error) throw error;
+          const html = projects.map(p => `
+            <article class="project-card detail-card">
+              <h3 class="project-title">${escapeHtml(p.title)}</h3>
+              <p class="project-desc"><strong>Description:</strong> ${escapeHtml(p.description)}</p>
+              <p class="project-problem"><strong>Problem:</strong> ${escapeHtml(p.problem)}</p>
+              <div class="project-tech">
+                ${p.tech.filter(t => t.trim()).map(t => `<span>${escapeHtml(t)}</span>`).join('')}
+              </div>
+              <p class="project-arch"><strong>Architecture:</strong> ${escapeHtml(p.architecture)}</p>
+              <div class="project-links" style="margin-top: 16px; display: flex; gap: 24px;">
+                <a href="${escapeHtml(p.github)}" class="card-link" target="_blank" rel="noopener">See Project →</a>
+                <a href="${escapeHtml(p.demo)}" class="card-link" target="_blank" rel="noopener">Live demo →</a>
+              </div>
+            </article>
+          `).join('');
+          projectsGrid.innerHTML = html || '<p style="color:var(--text-secondary); grid-column:1/-1;">No projects in this category.</p>';
+        } catch (e) {
+          console.error('Error loading projects:', e);
+          projectsGrid.innerHTML = '<p style="color:var(--text-secondary);">Error loading projects.</p>';
+        }
       }
-      const { data: projects, error } = await query;
-      if (error) {
-        console.error('Error loading projects:', error);
-        projectsGrid.innerHTML = '<p style="color:var(--text-secondary);">Error loading projects.</p>';
-        return;
-      }
-      const html = projects.map(p => `
-        <article class="project-card detail-card">
-          <h3 class="project-title">${escapeHtml(p.title)}</h3>
-          <p class="project-desc"><strong>Description:</strong> ${escapeHtml(p.description)}</p>
-          <p class="project-problem"><strong>Problem:</strong> ${escapeHtml(p.problem)}</p>
-          <div class="project-tech">
-            ${p.tech.filter(t => t.trim()).map(t => `<span>${escapeHtml(t)}</span>`).join('')}
-          </div>
-          <p class="project-arch"><strong>Architecture:</strong> ${escapeHtml(p.architecture)}</p>
-          <div class="project-links" style="margin-top: 16px; display: flex; gap: 24px;">
-            <a href="${escapeHtml(p.github)}" class="card-link" target="_blank" rel="noopener">See Project →</a>
-            <a href="${escapeHtml(p.demo)}" class="card-link" target="_blank" rel="noopener">Live demo →</a>
-          </div>
-        </article>
-      `).join('');
-      projectsGrid.innerHTML = html || '<p style="color:var(--text-secondary); grid-column:1/-1;">No projects in this category.</p>';
-    }
 
-    renderProjects('all');
+      renderProjects('all');
 
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    filterButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        filterButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        renderProjects(btn.dataset.filter);
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          renderProjects(btn.dataset.filter);
+        });
       });
-    });
+    }
   }
 
-  // ----- ADMIN PANEL (admin.html) -----
+  // ----- ADMIN PANEL (admin.html) – only if supabase available -----
   const unlockBtn = document.getElementById('unlockBtn');
   const passwordWrapper = document.getElementById('passwordWrapper');
   const adminPanel = document.getElementById('adminPanel');
 
   if (unlockBtn && passwordWrapper && adminPanel) {
-    let adminInitialized = false;
+    if (!supabase) {
+      passwordWrapper.innerHTML = '<p style="color:red;">Supabase not available. Admin disabled.</p>';
+    } else {
+      let adminInitialized = false;
 
-    unlockBtn.addEventListener('click', () => {
-      const pass = document.getElementById('adminPass').value;
-      if (pass === 'dev123') { // change this in production
-        passwordWrapper.classList.add('hidden');
-        adminPanel.classList.remove('hidden');
-        if (!adminInitialized) {
-          initAdmin();
-          adminInitialized = true;
+      unlockBtn.addEventListener('click', () => {
+        const pass = document.getElementById('adminPass').value;
+        if (pass === 'dev123') { // change this in production
+          passwordWrapper.classList.add('hidden');
+          adminPanel.classList.remove('hidden');
+          if (!adminInitialized) {
+            initAdmin();
+            adminInitialized = true;
+          }
+        } else {
+          alert('Incorrect password');
         }
-      } else {
-        alert('Incorrect password');
-      }
-    });
+      });
 
-    async function initAdmin() {
-      let editingId = null;
+      async function initAdmin() {
+        let editingId = null;
 
-      const addBtn = document.getElementById('addProjectBtn');
-      const resetBtn = document.getElementById('resetDefaultsBtn');
-      const projectListDiv = document.getElementById('projectList');
-      const formStatus = document.getElementById('adminFormStatus') || (() => {
-        const div = document.createElement('div');
-        div.id = 'adminFormStatus';
-        div.style.marginTop = '8px';
-        div.style.color = 'var(--accent)';
-        document.querySelector('.admin-form').appendChild(div);
-        return div;
-      })();
+        const addBtn = document.getElementById('addProjectBtn');
+        const resetBtn = document.getElementById('resetDefaultsBtn');
+        const projectListDiv = document.getElementById('projectList');
+        const formStatus = document.getElementById('adminFormStatus') || (() => {
+          const div = document.createElement('div');
+          div.id = 'adminFormStatus';
+          div.style.marginTop = '8px';
+          div.style.color = 'var(--accent)';
+          document.querySelector('.admin-form').appendChild(div);
+          return div;
+        })();
 
-      // Load and render projects
-      async function loadAndRender() {
-        const { data: projects, error } = await supabase.from('projects').select('*');
-        if (error) {
-          console.error('Error loading projects:', error);
-          return;
+        // Load and render projects
+        async function loadAndRender() {
+          try {
+            const { data: projects, error } = await supabase.from('projects').select('*');
+            if (error) throw error;
+            renderProjectList(projects);
+          } catch (e) {
+            console.error('Error loading projects:', e);
+            projectListDiv.innerHTML = '<p style="color:red;">Failed to load projects.</p>';
+          }
         }
-        renderProjectList(projects);
-      }
 
-      function renderProjectList(projects) {
-        projectListDiv.innerHTML = projects.map(p => `
-          <div class="project-item" data-id="${escapeHtml(p.id)}">
-            <div>
-              <strong style="color:var(--accent);">${escapeHtml(p.title)}</strong> 
-              <span style="color:var(--text-secondary);">(${escapeHtml(p.category)})</span>
+        function renderProjectList(projects) {
+          projectListDiv.innerHTML = projects.map(p => `
+            <div class="project-item" data-id="${escapeHtml(p.id)}">
+              <div>
+                <strong style="color:var(--accent);">${escapeHtml(p.title)}</strong> 
+                <span style="color:var(--text-secondary);">(${escapeHtml(p.category)})</span>
+              </div>
+              <div class="project-actions">
+                <button class="edit-btn" data-id="${escapeHtml(p.id)}">✎ Edit</button>
+                <button class="delete-btn" data-id="${escapeHtml(p.id)}">🗑 Delete</button>
+              </div>
             </div>
-            <div class="project-actions">
-              <button class="edit-btn" data-id="${escapeHtml(p.id)}">✎ Edit</button>
-              <button class="delete-btn" data-id="${escapeHtml(p.id)}">🗑 Delete</button>
-            </div>
-          </div>
-        `).join('');
+          `).join('');
 
-        // Delete handlers
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-          btn.addEventListener('click', async (e) => {
-            const id = e.target.dataset.id;
-            if (confirm('Are you sure?')) {
-              const { error } = await supabase.from('projects').delete().eq('id', id);
-              if (error) {
-                alert('Delete failed: ' + error.message);
-              } else {
-                loadAndRender();
-                if (editingId === id) clearForm();
+          // Delete handlers
+          document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+              const id = e.target.dataset.id;
+              if (confirm('Are you sure?')) {
+                try {
+                  const { error } = await supabase.from('projects').delete().eq('id', id);
+                  if (error) throw error;
+                  loadAndRender();
+                  if (editingId === id) clearForm();
+                } catch (e) {
+                  alert('Delete failed: ' + e.message);
+                }
               }
-            }
+            });
           });
-        });
 
-        // Edit handlers
-        document.querySelectorAll('.edit-btn').forEach(btn => {
-          btn.addEventListener('click', async (e) => {
-            const id = e.target.dataset.id;
-            const { data: project, error } = await supabase.from('projects').select('*').eq('id', id).single();
-            if (error || !project) {
-              alert('Error loading project');
-              return;
-            }
-            fillFormForEdit(project);
+          // Edit handlers
+          document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+              const id = e.target.dataset.id;
+              try {
+                const { data: project, error } = await supabase.from('projects').select('*').eq('id', id).single();
+                if (error) throw error;
+                fillFormForEdit(project);
+              } catch (e) {
+                alert('Error loading project: ' + e.message);
+              }
+            });
           });
-        });
-      }
-
-      function fillFormForEdit(project) {
-        document.getElementById('title').value = project.title || '';
-        document.getElementById('desc').value = project.description || '';
-        document.getElementById('problem').value = project.problem || '';
-        document.getElementById('tech').value = (project.tech || []).join(', ');
-        document.getElementById('arch').value = project.architecture || '';
-        document.getElementById('category').value = project.category || 'fullstack';
-        document.getElementById('github').value = project.github || '#';
-        document.getElementById('demo').value = project.demo || '#';
-
-        editingId = project.id;
-        addBtn.textContent = 'Update Project';
-        formStatus.textContent = 'Editing project. Click Update to save changes.';
-      }
-
-      function clearForm() {
-        document.getElementById('title').value = '';
-        document.getElementById('desc').value = '';
-        document.getElementById('problem').value = '';
-        document.getElementById('tech').value = '';
-        document.getElementById('arch').value = '';
-        document.getElementById('github').value = '#';
-        document.getElementById('demo').value = '#';
-        editingId = null;
-        addBtn.textContent = 'Add Project';
-        formStatus.textContent = '';
-      }
-
-      function normalizeUrl(url) {
-        if (!url || url === '#') return '#';
-        if (!url.match(/^[a-zA-Z]+:\/\//)) return 'https://' + url;
-        return url;
-      }
-
-      async function handleAddOrUpdate() {
-        const title = document.getElementById('title').value.trim();
-        const desc = document.getElementById('desc').value.trim();
-        const problem = document.getElementById('problem').value.trim();
-        const techStr = document.getElementById('tech').value.trim();
-        const arch = document.getElementById('arch').value.trim();
-        const category = document.getElementById('category').value;
-        let github = document.getElementById('github').value.trim() || '#';
-        let demo = document.getElementById('demo').value.trim() || '#';
-
-        if (!title || !desc || !problem || !techStr || !arch) {
-          alert('Please fill all fields');
-          return;
         }
 
-        github = normalizeUrl(github);
-        demo = normalizeUrl(demo);
-        const tech = techStr.split(',').map(s => s.trim()).filter(s => s);
+        function fillFormForEdit(project) {
+          document.getElementById('title').value = project.title || '';
+          document.getElementById('desc').value = project.description || '';
+          document.getElementById('problem').value = project.problem || '';
+          document.getElementById('tech').value = (project.tech || []).join(', ');
+          document.getElementById('arch').value = project.architecture || '';
+          document.getElementById('category').value = project.category || 'fullstack';
+          document.getElementById('github').value = project.github || '#';
+          document.getElementById('demo').value = project.demo || '#';
 
-        const projectData = {
-          title,
-          description: desc,
-          problem,
-          tech,
-          architecture: arch,
-          category,
-          github,
-          demo
-        };
-
-        let error;
-        if (editingId) {
-          ({ error } = await supabase.from('projects').update(projectData).eq('id', editingId));
-          if (!error) formStatus.textContent = '✅ Project updated.';
-        } else {
-          ({ error } = await supabase.from('projects').insert([projectData]));
-          if (!error) formStatus.textContent = '✅ Project added.';
+          editingId = project.id;
+          addBtn.textContent = 'Update Project';
+          formStatus.textContent = 'Editing project. Click Update to save changes.';
         }
 
-        if (error) {
-          alert('Operation failed: ' + error.message);
-        } else {
-          loadAndRender();
-          clearForm();
+        function clearForm() {
+          document.getElementById('title').value = '';
+          document.getElementById('desc').value = '';
+          document.getElementById('problem').value = '';
+          document.getElementById('tech').value = '';
+          document.getElementById('arch').value = '';
+          document.getElementById('github').value = '#';
+          document.getElementById('demo').value = '#';
+          editingId = null;
+          addBtn.textContent = 'Add Project';
+          formStatus.textContent = '';
         }
-      }
 
-      async function handleReset() {
-        if (confirm('Restore default projects? This will replace all current projects.')) {
-          // Delete all existing projects
-          const { error: deleteError } = await supabase.from('projects').delete().neq('id', '00000000-0000-0000-0000-000000000000'); // delete all
-          if (deleteError) {
-            alert('Error clearing projects: ' + deleteError.message);
+        function normalizeUrl(url) {
+          if (!url || url === '#') return '#';
+          if (!url.match(/^[a-zA-Z]+:\/\//)) return 'https://' + url;
+          return url;
+        }
+
+        async function handleAddOrUpdate() {
+          const title = document.getElementById('title').value.trim();
+          const desc = document.getElementById('desc').value.trim();
+          const problem = document.getElementById('problem').value.trim();
+          const techStr = document.getElementById('tech').value.trim();
+          const arch = document.getElementById('arch').value.trim();
+          const category = document.getElementById('category').value;
+          let github = document.getElementById('github').value.trim() || '#';
+          let demo = document.getElementById('demo').value.trim() || '#';
+
+          if (!title || !desc || !problem || !techStr || !arch) {
+            alert('Please fill all fields');
             return;
           }
-          const { error: insertError } = await supabase.from('projects').insert(DEFAULT_PROJECTS);
-          if (insertError) {
-            alert('Error inserting defaults: ' + insertError.message);
-          } else {
+
+          github = normalizeUrl(github);
+          demo = normalizeUrl(demo);
+          const tech = techStr.split(',').map(s => s.trim()).filter(s => s);
+
+          const projectData = {
+            title,
+            description: desc,
+            problem,
+            tech,
+            architecture: arch,
+            category,
+            github,
+            demo
+          };
+
+          try {
+            let error;
+            if (editingId) {
+              ({ error } = await supabase.from('projects').update(projectData).eq('id', editingId));
+              if (!error) formStatus.textContent = '✅ Project updated.';
+            } else {
+              ({ error } = await supabase.from('projects').insert([projectData]));
+              if (!error) formStatus.textContent = '✅ Project added.';
+            }
+            if (error) throw error;
             loadAndRender();
             clearForm();
+          } catch (e) {
+            alert('Operation failed: ' + e.message);
           }
         }
+
+        async function handleReset() {
+          if (confirm('Restore default projects? This will replace all current projects.')) {
+            try {
+              // Delete all existing projects
+              const { error: deleteError } = await supabase.from('projects').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+              if (deleteError) throw deleteError;
+              const { error: insertError } = await supabase.from('projects').insert(DEFAULT_PROJECTS);
+              if (insertError) throw insertError;
+              loadAndRender();
+              clearForm();
+            } catch (e) {
+              alert('Reset failed: ' + e.message);
+            }
+          }
+        }
+
+        addBtn.addEventListener('click', handleAddOrUpdate);
+        resetBtn.addEventListener('click', handleReset);
+
+        // Cancel edit button
+        const cancelEdit = document.createElement('button');
+        cancelEdit.textContent = 'Cancel Edit';
+        cancelEdit.type = 'button';
+        cancelEdit.style.marginLeft = '8px';
+        cancelEdit.addEventListener('click', clearForm);
+        addBtn.parentNode.insertBefore(cancelEdit, addBtn.nextSibling);
+
+        // Initial load
+        loadAndRender();
       }
-
-      addBtn.addEventListener('click', handleAddOrUpdate);
-      resetBtn.addEventListener('click', handleReset);
-
-      // Cancel edit button
-      const cancelEdit = document.createElement('button');
-      cancelEdit.textContent = 'Cancel Edit';
-      cancelEdit.type = 'button';
-      cancelEdit.style.marginLeft = '8px';
-      cancelEdit.addEventListener('click', clearForm);
-      addBtn.parentNode.insertBefore(cancelEdit, addBtn.nextSibling);
-
-      // Initial load
-      loadAndRender();
     }
   }
 
