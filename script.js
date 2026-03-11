@@ -1,20 +1,21 @@
 // ===== script.js =====
-// typing animation, scroll fade, projects + admin (Supabase) – robust version
+// typing animation, scroll fade, projects + admin (Supabase) – robust & error‑free
 
 (function() {
-  // ----- SUPABASE INITIALIZATION (with error handling) -----
+  // ----- SAFE SUPABASE INITIALIZATION (no crashes) -----
   let supabase = null;
   try {
-    if (typeof supabase === 'undefined' || !supabase.createClient) {
-      console.warn('Supabase library not loaded. Supabase features disabled.');
-    } else {
+    // Check if the Supabase library is loaded globally
+    if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
       const SUPABASE_URL = 'https://qrfgrfflkpudefcsbndn.supabase.co';
       const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyZmdyZmZsa3B1ZGVmY3NibmRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMzE0NDQsImV4cCI6MjA4ODgwNzQ0NH0.CzTNuVWK2d9cwvAqSfE4IT2j3N14DORnpCqL__Z-Gdw';
-      supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      console.log('Supabase initialized successfully.');
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      console.log('✅ Supabase initialized.');
+    } else {
+      console.warn('⚠️ Supabase library not loaded. Supabase features disabled.');
     }
   } catch (e) {
-    console.error('Failed to initialize Supabase:', e);
+    console.error('❌ Supabase initialization failed:', e);
   }
 
   // ----- DEFAULT PROJECTS (used only for seeding) -----
@@ -51,7 +52,7 @@
     }
   ];
 
-  // ----- HELPER: Seed database if empty (only if supabase available) -----
+  // ----- SEED DATABASE IF EMPTY (only if supabase available) -----
   async function seedIfEmpty() {
     if (!supabase) return;
     try {
@@ -60,20 +61,22 @@
         .select('*', { count: 'exact', head: true });
       if (error) throw error;
       if (count === 0) {
-        console.log('Seeding default projects...');
+        console.log('🌱 Seeding default projects...');
         const { error: insertError } = await supabase.from('projects').insert(DEFAULT_PROJECTS);
         if (insertError) throw insertError;
-        console.log('Seeding successful.');
+        console.log('✅ Seeding successful.');
       }
     } catch (e) {
-      console.error('Seeding failed:', e);
+      console.error('❌ Seeding failed:', e);
     }
   }
 
-  // Call seeding on load (non-blocking)
+  // Call seeding (non‑blocking)
   if (supabase) seedIfEmpty();
 
-  // ----- TYPING ANIMATION (always works) -----
+  // ========== FEATURES THAT ALWAYS WORK ==========
+
+  // ----- TYPING ANIMATION -----
   const typedElement = document.querySelector('.typed-role');
   if (typedElement) {
     const phrases = [
@@ -115,7 +118,7 @@
     type();
   }
 
-  // ----- FADE-IN ON SCROLL (always works) -----
+  // ----- FADE-IN ON SCROLL -----
   const fadeElements = document.querySelectorAll('.fade-in');
   if (fadeElements.length) {
     const observer = new IntersectionObserver((entries) => {
@@ -126,7 +129,7 @@
     fadeElements.forEach(el => observer.observe(el));
   }
 
-  // ----- CONTACT FORM (always works) -----
+  // ----- CONTACT FORM (FormSubmit) -----
   const contactForm = document.getElementById('contact-form');
   if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
@@ -163,11 +166,14 @@
     });
   }
 
-  // ----- RENDER FEATURED PROJECTS (index.html) – only if supabase available -----
+  // ========== SUPABASE‑DEPENDENT FEATURES ==========
+  // (only run if supabase is available)
+
+  // ----- FEATURED PROJECTS (index.html) -----
   const featuredGrid = document.getElementById('featured-projects-grid');
   if (featuredGrid) {
     if (!supabase) {
-      featuredGrid.innerHTML = '<p style="color:var(--text-secondary);">Supabase not available. Please check console.</p>';
+      featuredGrid.innerHTML = '<p style="color:var(--text-secondary);">⚠️ Supabase not available.</p>';
     } else {
       async function loadFeatured() {
         try {
@@ -195,11 +201,11 @@
     }
   }
 
-  // ----- PROJECTS PAGE: render with filter – only if supabase available -----
+  // ----- PROJECTS PAGE (projects.html) -----
   const projectsGrid = document.getElementById('projects-grid');
   if (projectsGrid) {
     if (!supabase) {
-      projectsGrid.innerHTML = '<p style="color:var(--text-secondary);">Supabase not available. Please check console.</p>';
+      projectsGrid.innerHTML = '<p style="color:var(--text-secondary);">⚠️ Supabase not available.</p>';
     } else {
       async function renderProjects(filter = 'all') {
         try {
@@ -244,14 +250,14 @@
     }
   }
 
-  // ----- ADMIN PANEL (admin.html) – only if supabase available -----
+  // ----- ADMIN PANEL (admin.html) -----
   const unlockBtn = document.getElementById('unlockBtn');
   const passwordWrapper = document.getElementById('passwordWrapper');
   const adminPanel = document.getElementById('adminPanel');
 
   if (unlockBtn && passwordWrapper && adminPanel) {
     if (!supabase) {
-      passwordWrapper.innerHTML = '<p style="color:red;">Supabase not available. Admin disabled.</p>';
+      passwordWrapper.innerHTML = '<p style="color:red;">❌ Supabase not available. Admin disabled.</p>';
     } else {
       let adminInitialized = false;
 
@@ -284,7 +290,6 @@
           return div;
         })();
 
-        // Load and render projects
         async function loadAndRender() {
           try {
             const { data: projects, error } = await supabase.from('projects').select('*');
@@ -310,7 +315,6 @@
             </div>
           `).join('');
 
-          // Delete handlers
           document.querySelectorAll('.delete-btn').forEach(btn => {
             btn.addEventListener('click', async (e) => {
               const id = e.target.dataset.id;
@@ -327,7 +331,6 @@
             });
           });
 
-          // Edit handlers
           document.querySelectorAll('.edit-btn').forEach(btn => {
             btn.addEventListener('click', async (e) => {
               const id = e.target.dataset.id;
@@ -426,7 +429,6 @@
         async function handleReset() {
           if (confirm('Restore default projects? This will replace all current projects.')) {
             try {
-              // Delete all existing projects
               const { error: deleteError } = await supabase.from('projects').delete().neq('id', '00000000-0000-0000-0000-000000000000');
               if (deleteError) throw deleteError;
               const { error: insertError } = await supabase.from('projects').insert(DEFAULT_PROJECTS);
@@ -442,7 +444,6 @@
         addBtn.addEventListener('click', handleAddOrUpdate);
         resetBtn.addEventListener('click', handleReset);
 
-        // Cancel edit button
         const cancelEdit = document.createElement('button');
         cancelEdit.textContent = 'Cancel Edit';
         cancelEdit.type = 'button';
@@ -450,7 +451,6 @@
         cancelEdit.addEventListener('click', clearForm);
         addBtn.parentNode.insertBefore(cancelEdit, addBtn.nextSibling);
 
-        // Initial load
         loadAndRender();
       }
     }
