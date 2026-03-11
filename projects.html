@@ -12,6 +12,220 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&display=swap" rel="stylesheet">
+  <style>
+    /* Compact project card styles */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .project-card.compact {
+      padding: 1.25rem;
+    }
+
+    .project-card.compact .project-title {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .project-card.compact .project-desc {
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .project-card.compact .project-tech {
+      margin: 0.75rem 0;
+      gap: 0.4rem;
+    }
+
+    .project-card.compact .project-tech span {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+    }
+
+    .project-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .project-actions .btn-small {
+      padding: 0.4rem 1rem;
+      font-size: 0.85rem;
+      border-radius: 30px;
+      background: transparent;
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
+    }
+
+    .project-actions .btn-small:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(59,130,246,0.05);
+    }
+
+    .project-actions .btn-small i {
+      font-size: 0.8rem;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      background: transparent;
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+      padding: 0.5rem 1.5rem;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .page-title {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      background: linear-gradient(to right, #fff, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--accent);
+      border-radius: 20px;
+      padding: 2rem;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+
+    .modal-content h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+
+    .modal-content h3 {
+      font-size: 1.2rem;
+      margin: 1.5rem 0 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .modal-content p {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .modal-tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    .modal-tech span {
+      background: var(--bg-secondary);
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-light);
+    }
+
+    .modal-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .modal-links a {
+      padding: 0.6rem 1.5rem;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .modal-links .btn-github {
+      background: transparent;
+      border: 1px solid var(--border-light);
+      color: var(--text-secondary);
+    }
+
+    .modal-links .btn-github:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .modal-links .btn-demo {
+      background: var(--accent);
+      color: white;
+    }
+
+    .modal-links .btn-demo:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      font-size: 2rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .modal-close:hover {
+      color: var(--accent);
+    }
+  </style>
 </head>
 <body>
   <header class="site-header">
@@ -32,7 +246,7 @@
       <div class="container">
         <h1 class="page-title">All projects</h1>
         
-        <!-- Filter bar with modern buttons -->
+        <!-- Filter bar -->
         <div class="filter-bar">
           <button class="filter-btn active" data-filter="all">All</button>
           <button class="filter-btn" data-filter="frontend">Frontend</button>
@@ -40,7 +254,7 @@
           <button class="filter-btn" data-filter="fullstack">Fullstack</button>
         </div>
 
-        <!-- Projects grid populated by JavaScript -->
+        <!-- Projects grid -->
         <div class="projects-grid" id="projects-grid"></div>
       </div>
     </section>
@@ -57,6 +271,178 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <!-- Project Detail Modal -->
+  <div class="modal" id="projectModal">
+    <div class="modal-content">
+      <span class="modal-close" id="closeModal">&times;</span>
+      <h2 id="modalTitle"></h2>
+      <p id="modalDescription"></p>
+      
+      <h3>Problem</h3>
+      <p id="modalProblem"></p>
+      
+      <h3>Architecture</h3>
+      <p id="modalArchitecture"></p>
+      
+      <h3>Tech Stack</h3>
+      <div class="modal-tech" id="modalTech"></div>
+      
+      <div class="modal-links">
+        <a href="#" id="modalGithub" class="btn-github" target="_blank" rel="noopener"><i class="fab fa-github"></i> View Code</a>
+        <a href="#" id="modalDemo" class="btn-demo" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // ----- DEFAULT PROJECTS (full details) -----
+      const DEFAULT_PROJECTS = [
+        {
+          id: '1',
+          title: "ACE-Student Companion",
+          description: "High‑performance Student Assistant with real‑time inventory updates and an in‑built AI (ACE-AI).",
+          problem: "Monolithic platforms struggle with scale and real‑time sync. Needed a decoupled, event‑driven solution.",
+          tech: ["HTML", "CSS", "JAVASCRIPT", "Node.js"],
+          architecture: "Modular services: inventory service (Redis pub/sub), order service (ACID), API gateway (rate‑limiting, JWT).",
+          category: "fullstack",
+          github: "https://efgfdsdfdf.github.io/edutrack/",
+          demo: "https://edutrack-rust.vercel.app/"
+        },
+        {
+          id: '2',
+          title: "TECHTITANS",
+          description: "An internal system for a company called TECHTITANS, with group discussions and direct messages based on roles.",
+          problem: "Remote teams need low‑latency task boards without page reloads.",
+          tech: ["React", "TypeScript", "Fastify", "MongoDB", "Socket.io"],
+          architecture: "Frontend: state machine (xState) + optimistic updates. Backend: horizontal scaling with Redis adapter for Socket.io",
+          category: "backend",
+          github: "https://efgfdsdfdf.github.io/TECHTITANS/",
+          demo: "https://efgfdsdfdf.github.io/TECHTITANS/"
+        },
+        {
+          id: '3',
+          title: "ZED",
+          description: "AI-powered health assistant that analyzes symptoms, tracks vital signs, and provides intelligent health insights.",
+          problem: "Many people don’t understand their health symptoms. ZED provides AI‑powered analysis, vital tracking, and encrypted storage for early health awareness.",
+          tech: ["React", "TypeScript", "Fastify", "MongoDB", "Socket.io"],
+          architecture: "User → Encrypt → Backend → AI Analysis → Encrypted Storage → User Dashboard. Full end‑to‑end encrypted health monitoring.",
+          category: "fullstack",
+          github: "https://efgfdsdfdf.github.io/ZED/",
+          demo: "https://efgfdsdfdf.github.io/ZED/"
+        }
+      ];
+
+      // ----- localStorage helpers -----
+      function getProjects() {
+        const stored = localStorage.getItem('portfolio_projects');
+        if (stored) {
+          try {
+            return JSON.parse(stored);
+          } catch (e) {
+            return DEFAULT_PROJECTS;
+          }
+        } else {
+          localStorage.setItem('portfolio_projects', JSON.stringify(DEFAULT_PROJECTS));
+          return DEFAULT_PROJECTS;
+        }
+      }
+
+      // ----- Escape HTML helper -----
+      function escapeHtml(unsafe) {
+        if (!unsafe) return '';
+        return String(unsafe)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      // ----- Render compact project cards -----
+      const projectsGrid = document.getElementById('projects-grid');
+      const projects = getProjects();
+
+      function renderProjects(filter = 'all') {
+        const filtered = filter === 'all' 
+          ? projects 
+          : projects.filter(p => p.category.toLowerCase() === filter.toLowerCase());
+
+        const html = filtered.map(p => `
+          <article class="project-card compact" data-id="${escapeHtml(p.id)}">
+            <h3 class="project-title">${escapeHtml(p.title)}</h3>
+            <p class="project-desc">${escapeHtml(p.description)}</p>
+            <div class="project-tech">
+              ${p.tech.filter(t => t.trim()).map(t => `<span>${escapeHtml(t)}</span>`).join('')}
+            </div>
+            <div class="project-actions">
+              <button class="btn-small about-btn" data-id="${escapeHtml(p.id)}">
+                <i class="fas fa-info-circle"></i> About
+              </button>
+              <a href="${escapeHtml(p.demo)}" class="btn-small" target="_blank" rel="noopener">
+                <i class="fas fa-external-link-alt"></i> Live Demo
+              </a>
+            </div>
+          </article>
+        `).join('');
+
+        projectsGrid.innerHTML = html || '<p style="color:var(--text-secondary); grid-column:1/-1; text-align:center;">No projects in this category.</p>';
+
+        // Attach About button listeners
+        document.querySelectorAll('.about-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const id = e.currentTarget.dataset.id;
+            const project = projects.find(p => p.id === id);
+            if (project) {
+              showModal(project);
+            }
+          });
+        });
+      }
+
+      // ----- Modal functions -----
+      const modal = document.getElementById('projectModal');
+      const closeModal = document.getElementById('closeModal');
+
+      function showModal(project) {
+        document.getElementById('modalTitle').textContent = project.title;
+        document.getElementById('modalDescription').textContent = project.description;
+        document.getElementById('modalProblem').textContent = project.problem;
+        document.getElementById('modalArchitecture').textContent = project.architecture;
+        
+        const techContainer = document.getElementById('modalTech');
+        techContainer.innerHTML = project.tech.map(t => `<span>${escapeHtml(t)}</span>`).join('');
+        
+        document.getElementById('modalGithub').href = project.github;
+        document.getElementById('modalDemo').href = project.demo;
+        
+        modal.classList.add('active');
+      }
+
+      closeModal.addEventListener('click', () => {
+        modal.classList.remove('active');
+      });
+
+      // Click outside to close
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.classList.remove('active');
+        }
+      });
+
+      // Filter buttons
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          renderProjects(btn.dataset.filter);
+        });
+      });
+
+      // Initial render
+      renderProjects('all');
+    })();
+  </script>
 </body>
 </html>
