@@ -294,61 +294,20 @@
     </div>
   </div>
 
+  <!-- Supabase client library -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
   <script>
     (function() {
-      // ----- DEFAULT PROJECTS (full details) -----
-      const DEFAULT_PROJECTS = [
-        {
-          id: '1',
-          title: "ACE-Student Companion",
-          description: "High‑performance Student Assistant with real‑time inventory updates and an in‑built AI (ACE-AI).",
-          problem: "Monolithic platforms struggle with scale and real‑time sync. Needed a decoupled, event‑driven solution.",
-          tech: ["HTML", "CSS", "JAVASCRIPT", "Node.js"],
-          architecture: "Modular services: inventory service (Redis pub/sub), order service (ACID), API gateway (rate‑limiting, JWT).",
-          category: "fullstack",
-          github: "https://efgfdsdfdf.github.io/edutrack/",
-          demo: "https://edutrack-rust.vercel.app/"
-        },
-        {
-          id: '2',
-          title: "TECHTITANS",
-          description: "An internal system for a company called TECHTITANS, with group discussions and direct messages based on roles.",
-          problem: "Remote teams need low‑latency task boards without page reloads.",
-          tech: ["React", "TypeScript", "Fastify", "MongoDB", "Socket.io"],
-          architecture: "Frontend: state machine (xState) + optimistic updates. Backend: horizontal scaling with Redis adapter for Socket.io",
-          category: "backend",
-          github: "https://efgfdsdfdf.github.io/TECHTITANS/",
-          demo: "https://efgfdsdfdf.github.io/TECHTITANS/"
-        },
-        {
-          id: '3',
-          title: "ZED",
-          description: "AI-powered health assistant that analyzes symptoms, tracks vital signs, and provides intelligent health insights.",
-          problem: "Many people don’t understand their health symptoms. ZED provides AI‑powered analysis, vital tracking, and encrypted storage for early health awareness.",
-          tech: ["React", "TypeScript", "Fastify", "MongoDB", "Socket.io"],
-          architecture: "User → Encrypt → Backend → AI Analysis → Encrypted Storage → User Dashboard. Full end‑to‑end encrypted health monitoring.",
-          category: "fullstack",
-          github: "https://efgfdsdfdf.github.io/ZED/",
-          demo: "https://efgfdsdfdf.github.io/ZED/"
-        }
-      ];
+      // ----- SUPABASE INITIALIZATION -----
+      // Replace with your Supabase project URL and anon key
+      const SUPABASE_URL = 'https://your-project.supabase.co';
+      const SUPABASE_ANON_KEY = 'your-anon-key';
 
-      // ----- localStorage helpers -----
-      function getProjects() {
-        const stored = localStorage.getItem('portfolio_projects');
-        if (stored) {
-          try {
-            return JSON.parse(stored);
-          } catch (e) {
-            return DEFAULT_PROJECTS;
-          }
-        } else {
-          localStorage.setItem('portfolio_projects', JSON.stringify(DEFAULT_PROJECTS));
-          return DEFAULT_PROJECTS;
-        }
-      }
+      const { createClient } = supabase;
+      const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-      // ----- Escape HTML helper -----
+      // ----- Helper: escape HTML -----
       function escapeHtml(unsafe) {
         if (!unsafe) return '';
         return String(unsafe)
@@ -361,14 +320,25 @@
 
       // ----- Render compact project cards -----
       const projectsGrid = document.getElementById('projects-grid');
-      const projects = getProjects();
+      let allProjects = []; // cache for filtering
 
-      function renderProjects(filter = 'all') {
-        const filtered = filter === 'all' 
-          ? projects 
-          : projects.filter(p => p.category.toLowerCase() === filter.toLowerCase());
+      async function loadProjects(filter = 'all') {
+        let query = supabase.from('projects').select('*');
+        if (filter !== 'all') {
+          query = query.eq('category', filter.toLowerCase());
+        }
+        const { data: projects, error } = await query;
+        if (error) {
+          console.error('Error loading projects:', error);
+          projectsGrid.innerHTML = '<p style="color:var(--text-secondary); grid-column:1/-1; text-align:center;">Error loading projects.</p>';
+          return;
+        }
+        allProjects = projects; // store for modal lookup
+        renderProjects(projects);
+      }
 
-        const html = filtered.map(p => `
+      function renderProjects(projects) {
+        const html = projects.map(p => `
           <article class="project-card compact" data-id="${escapeHtml(p.id)}">
             <h3 class="project-title">${escapeHtml(p.title)}</h3>
             <p class="project-desc">${escapeHtml(p.description)}</p>
@@ -392,7 +362,7 @@
         document.querySelectorAll('.about-btn').forEach(btn => {
           btn.addEventListener('click', (e) => {
             const id = e.currentTarget.dataset.id;
-            const project = projects.find(p => p.id === id);
+            const project = allProjects.find(p => p.id === id);
             if (project) {
               showModal(project);
             }
@@ -436,12 +406,12 @@
         btn.addEventListener('click', () => {
           filterButtons.forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
-          renderProjects(btn.dataset.filter);
+          loadProjects(btn.dataset.filter);
         });
       });
 
-      // Initial render
-      renderProjects('all');
+      // Initial load
+      loadProjects('all');
     })();
   </script>
 </body>
