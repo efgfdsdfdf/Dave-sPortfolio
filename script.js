@@ -26,7 +26,18 @@
           github: "https://efgfdsdfdf.github.io/TECHTITANS/",
           demo: "https://efgfdsdfdf.github.io/TECHTITANS/"
         },
-
+        {
+          id: '3',
+          title: "ZED",
+          description: "ZED is an AI-powered health assistant app that helps users analyze symptoms, track vital signs, and receive intelligent health insights in real time. It securely collects user health data and uses AI to provide personalized guidance and early health awareness, helping users understand their condition and decide when to seek professional medical care. 🔐🩺.",
+          problem: "Problem ZED Is Solving Many people don’t understand their health symptoms or body signals, and getting quick medical guidance is often slow, expensive, or inaccessible. People may ignore symptoms, panic unnecessarily, or search unreliable information online. ZED solves this problem by providing an AI-powered health assistant that helps users analyze symptoms, track vital signs, and receive instant health insights, allowing them to make informed decisions about their health earlier and more easily. 🩺📱",
+          tech: ["React", "TypeScript", "Fastify", "MongoDB", "Socket.io"],
+          architecture: "User → Encrypt → Backend → AI Analysis → Encrypted Storage → User Dashboard This gives a full end-to-end encrypted health monitoring and AI analysis system.",
+          category: "fullstack",
+          github: "https://efgfdsdfdf.github.io/ZED/",
+          demo: "https://efgfdsdfdf.github.io/ZED/"
+        },
+        
 
       ];
 
@@ -314,6 +325,7 @@ if (contactForm) {
   }
 
 })();
+
 
 
 
