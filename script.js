@@ -1,662 +1,865 @@
-(function () {
-  const SUPABASE_URL = "https://qrfgrfflkpudefcsbndn.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyZmdyZmZsa3B1ZGVmY3NibmRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMzE0NDQsImV4cCI6MjA4ODgwNzQ0NH0.CzTNuVWK2d9cwvAqSfE4IT2j3N14DORnpCqL__Z-Gdw";
-  const STORAGE_KEY = "portfolio_projects";
-  const ADMIN_PASSWORD = "dev123";
+:root {
+  --bg: #f4efe8;
+  --bg-soft: #efe7dc;
+  --surface: rgba(255, 252, 247, 0.88);
+  --surface-strong: #fffaf3;
+  --card: #ffffff;
+  --line: rgba(40, 39, 37, 0.1);
+  --line-strong: rgba(40, 39, 37, 0.18);
+  --text: #1f2430;
+  --muted: #5d6470;
+  --accent: #a95b31;
+  --accent-deep: #7d3f1b;
+  --navy: #22344a;
+  --success: #2d7c58;
+  --shadow: 0 18px 50px rgba(52, 44, 34, 0.08);
+  --shadow-soft: 0 12px 30px rgba(52, 44, 34, 0.05);
+  --radius-xl: 32px;
+  --radius-lg: 22px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+  --container: 1180px;
+}
 
-  const DEFAULT_PROJECTS = [
-    {
-      title: "ACE Student Companion",
-      description: "A student platform that combines utility tools, learning support, and AI-assisted guidance in one smooth experience.",
-      problem: "Students needed one workspace for planning, support, and quick access to tools without switching between scattered products.",
-      tech: ["HTML", "CSS", "JavaScript", "Node.js"],
-      architecture: "A lightweight frontend paired with backend services for student workflows, AI assistance, and structured data management.",
-      category: "fullstack",
-      github: "https://efgfdsdfdf.github.io/edutrack/",
-      demo: "https://edutrack-rust.vercel.app/"
-    },
-    {
-      title: "TechTitans Workspace",
-      description: "An internal communication system with role-based discussions, direct messaging, and structured collaboration flows.",
-      problem: "The team needed a private communication layer that matched business roles instead of relying on generic chat tools.",
-      tech: ["React", "TypeScript", "Fastify", "MongoDB", "Socket.io"],
-      architecture: "Realtime messaging with role-aware access, persistent conversations, and a backend designed for team-level coordination.",
-      category: "backend",
-      github: "https://efgfdsdfdf.github.io/TECHTITANS/",
-      demo: "https://efgfdsdfdf.github.io/TECHTITANS/"
-    },
-    {
-      title: "ZED Health Assistant",
-      description: "An AI-powered health assistant for symptom analysis, vital tracking, and secure wellness monitoring.",
-      problem: "People often struggle to understand symptoms early. ZED aims to offer faster insight and more consistent tracking.",
-      tech: ["React", "TypeScript", "Node.js", "AI Integration"],
-      architecture: "A secure fullstack flow that collects health signals, processes them through AI logic, and returns insights through a guided dashboard.",
-      category: "fullstack",
-      github: "https://efgfdsdfdf.github.io/ZED/",
-      demo: "https://efgfdsdfdf.github.io/ZED/"
-    }
-  ];
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
-  const supabaseClient = createSupabaseClient();
-  let cachedProjects = [];
-  let activeEditId = null;
+html {
+  scroll-behavior: smooth;
+}
 
-  initReveal();
-  initTyping();
-  initContactForm();
-  initFeaturedProjects();
-  initProjectsPage();
-  initAdminPanel();
+body {
+  margin: 0;
+  min-width: 320px;
+  font-family: "Manrope", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(169, 91, 49, 0.09), transparent 28%),
+    radial-gradient(circle at top right, rgba(34, 52, 74, 0.08), transparent 24%),
+    linear-gradient(180deg, #faf5ee 0%, var(--bg) 100%);
+}
 
-  function createSupabaseClient() {
-    if (!window.supabase || typeof window.supabase.createClient !== "function") {
-      return null;
-    }
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
-    try {
-      return window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    } catch (error) {
-      console.error("Supabase initialization failed:", error);
-      return null;
-    }
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.page-shell {
+  position: relative;
+}
+
+.container {
+  width: min(var(--container), calc(100% - 2rem));
+  margin: 0 auto;
+}
+
+.section {
+  padding: 5.5rem 0;
+}
+
+.section-soft {
+  background: rgba(255, 250, 243, 0.58);
+  border-top: 1px solid rgba(40, 39, 37, 0.05);
+  border-bottom: 1px solid rgba(40, 39, 37, 0.05);
+}
+
+.eyebrow {
+  margin: 0 0 1rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+h1 {
+  font-size: clamp(3rem, 6vw, 5.4rem);
+  line-height: 0.98;
+}
+
+h2 {
+  font-size: clamp(2rem, 3.8vw, 3.25rem);
+  line-height: 1.05;
+}
+
+h3 {
+  font-size: 1.4rem;
+  line-height: 1.15;
+}
+
+p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.section-title,
+.page-title {
+  max-width: 13ch;
+}
+
+.page-summary,
+.hero-summary,
+.section-copy,
+.contact-copy p {
+  font-size: 1.02rem;
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  backdrop-filter: blur(16px);
+  background: rgba(250, 245, 238, 0.86);
+  border-bottom: 1px solid rgba(40, 39, 37, 0.06);
+}
+
+.nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 1rem 0;
+}
+
+.brand-mark {
+  font-family: "Fraunces", serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.brand-mark span {
+  color: var(--accent);
+}
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.main-nav a {
+  color: var(--muted);
+  font-size: 0.96rem;
+  font-weight: 600;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.main-nav a:hover,
+.main-nav a.active {
+  color: var(--text);
+}
+
+.nav-pill {
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.hero {
+  padding-top: 4.8rem;
+  padding-bottom: 4.5rem;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  gap: 2rem;
+  align-items: stretch;
+}
+
+.hero-copy {
+  padding: 1rem 0;
+}
+
+.hero-summary {
+  max-width: 60ch;
+  margin-top: 1.5rem;
+}
+
+.hero-role-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+  padding: 0.9rem 1.15rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid rgba(40, 39, 37, 0.08);
+  box-shadow: var(--shadow-soft);
+}
+
+.role-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.typed-role {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 12rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.15rem;
+  padding: 0.8rem 1.3rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 0.95rem;
+  font-weight: 700;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-primary {
+  background: var(--text);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--navy);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--line-strong);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.hero-points {
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 2rem;
+}
+
+.hero-points li {
+  position: relative;
+  padding-left: 1.2rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.hero-points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.72rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.hero-panel {
+  display: flex;
+}
+
+.hero-panel-card {
+  width: 100%;
+  padding: 2rem;
+  border-radius: var(--radius-xl);
+  background:
+    linear-gradient(160deg, rgba(34, 52, 74, 0.98), rgba(26, 39, 54, 0.96)),
+    #23354a;
+  color: rgba(255, 255, 255, 0.86);
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-panel-card::after {
+  content: "";
+  position: absolute;
+  inset: auto -12% -12% auto;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: rgba(169, 91, 49, 0.14);
+  filter: blur(8px);
+}
+
+.panel-label {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.hero-panel-card h2 {
+  margin-top: 0.9rem;
+  color: #fff8f0;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+}
+
+.hero-metrics {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.hero-metrics div {
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.metric-value {
+  display: block;
+  font-family: "Fraunces", serif;
+  font-size: 2rem;
+  color: #fff;
+}
+
+.metric-name {
+  display: block;
+  margin-top: 0.3rem;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.95rem;
+}
+
+.about-grid,
+.contact-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.section-copy {
+  display: grid;
+  gap: 1rem;
+}
+
+.principles-grid,
+.skills-grid,
+.projects-grid,
+.admin-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.principles-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 2.5rem;
+}
+
+.principle-card,
+.skill-card,
+.project-card,
+.admin-card,
+.lock-card {
+  background: var(--surface);
+  border: 1px solid rgba(40, 39, 37, 0.08);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+.principle-card,
+.skill-card,
+.project-card,
+.admin-card,
+.lock-card {
+  padding: 1.6rem;
+}
+
+.card-kicker,
+.project-category {
+  margin-bottom: 0.8rem;
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.principle-card p:last-child,
+.skill-card li,
+.project-card p {
+  color: var(--muted);
+}
+
+.skills-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.skill-card ul {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 1.15rem;
+}
+
+.skill-card li {
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(40, 39, 37, 0.08);
+}
+
+.section-head {
+  max-width: 44rem;
+}
+
+.section-head-split {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  max-width: none;
+}
+
+.text-link {
+  color: var(--navy);
+  font-weight: 700;
+}
+
+.text-link:hover {
+  color: var(--accent);
+}
+
+.projects-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 2rem;
+}
+
+.projects-grid-full {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 100%;
+}
+
+.project-title {
+  font-size: 1.45rem;
+}
+
+.project-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.project-meta span {
+  padding: 0.42rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(34, 52, 74, 0.07);
+  color: var(--navy);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: auto;
+  padding-top: 0.2rem;
+}
+
+.project-links a {
+  font-weight: 700;
+  color: var(--accent-deep);
+}
+
+.project-links a:hover {
+  color: var(--accent);
+}
+
+.contact-grid {
+  padding: 2rem;
+  border-radius: var(--radius-xl);
+  background: rgba(255, 252, 247, 0.74);
+  border: 1px solid rgba(40, 39, 37, 0.08);
+  box-shadow: var(--shadow-soft);
+}
+
+.contact-list {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 1.5rem;
+}
+
+.contact-list a,
+.contact-list span {
+  color: var(--navy);
+  font-weight: 600;
+}
+
+.contact-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.contact-form label,
+.single-field,
+.admin-form-grid label {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.contact-form span,
+.single-field span,
+.admin-form-grid span {
+  font-size: 0.84rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--navy);
+}
+
+.contact-form input,
+.contact-form textarea,
+.single-field input,
+.admin-form-grid input,
+.admin-form-grid textarea,
+.admin-form-grid select {
+  width: 100%;
+  border: 1px solid rgba(40, 39, 37, 0.12);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--text);
+  padding: 0.95rem 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus,
+.single-field input:focus,
+.admin-form-grid input:focus,
+.admin-form-grid textarea:focus,
+.admin-form-grid select:focus {
+  outline: none;
+  border-color: rgba(169, 91, 49, 0.45);
+  box-shadow: 0 0 0 4px rgba(169, 91, 49, 0.08);
+}
+
+.contact-form textarea,
+.admin-form-grid textarea {
+  resize: vertical;
+}
+
+.form-status,
+.admin-status {
+  min-height: 1.3rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--success);
+}
+
+.page-intro {
+  padding-bottom: 2.2rem;
+}
+
+.page-summary {
+  max-width: 58ch;
+  margin-top: 1rem;
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.filter-btn {
+  padding: 0.8rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(40, 39, 37, 0.12);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+  background: var(--text);
+  border-color: var(--text);
+  color: #fff;
+}
+
+.admin-shell {
+  min-height: 20rem;
+}
+
+.lock-card {
+  max-width: 32rem;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.lock-card .section-title {
+  max-width: none;
+  margin-bottom: 1rem;
+}
+
+.lock-card .btn {
+  margin-top: 1rem;
+}
+
+.hidden-panel {
+  display: none;
+}
+
+.admin-grid {
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+}
+
+.admin-card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+  margin-bottom: 1.5rem;
+}
+
+.admin-card .section-title {
+  max-width: none;
+  font-size: 2rem;
+}
+
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.admin-span-2 {
+  grid-column: 1 / -1;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.admin-list {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.admin-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(40, 39, 37, 0.08);
+  background: rgba(255, 255, 255, 0.68);
+}
+
+.admin-item-copy {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.admin-item-title {
+  font-weight: 800;
+  color: var(--text);
+}
+
+.admin-item-meta {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.admin-item-actions {
+  display: flex;
+  gap: 0.55rem;
+  flex-shrink: 0;
+}
+
+.admin-item-actions button {
+  padding: 0.7rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid rgba(40, 39, 37, 0.12);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--text);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.admin-item-actions button:hover {
+  border-color: var(--text);
+}
+
+.admin-item-actions .delete-btn:hover {
+  border-color: #a23c2a;
+  color: #a23c2a;
+}
+
+.site-footer {
+  padding: 1.8rem 0 2.5rem;
+}
+
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(40, 39, 37, 0.08);
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-links a {
+  color: var(--navy);
+  font-weight: 700;
+}
+
+.hidden-field {
+  display: none;
+}
+
+.empty-state {
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px dashed rgba(40, 39, 37, 0.12);
+  color: var(--muted);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 1024px) {
+  .hero-grid,
+  .about-grid,
+  .contact-grid,
+  .admin-grid {
+    grid-template-columns: 1fr;
   }
 
-  async function getProjects() {
-    if (supabaseClient) {
-      try {
-        await seedIfNeeded();
-        const { data, error } = await supabaseClient
-          .from("projects")
-          .select("*")
-          .order("title", { ascending: true });
+  .skills-grid,
+  .projects-grid,
+  .projects-grid-full,
+  .principles-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
 
-        if (error) {
-          throw error;
-        }
-
-        cachedProjects = sanitizeProjects(data);
-        return cachedProjects;
-      } catch (error) {
-        console.warn("Falling back to local projects:", error);
-      }
-    }
-
-    return getLocalProjects();
+@media (max-width: 760px) {
+  .section {
+    padding: 4.2rem 0;
   }
 
-  function getLocalProjects() {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-
-    if (!stored) {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_PROJECTS));
-      cachedProjects = sanitizeProjects(DEFAULT_PROJECTS);
-      return cachedProjects;
-    }
-
-    try {
-      cachedProjects = sanitizeProjects(JSON.parse(stored));
-      return cachedProjects;
-    } catch (error) {
-      cachedProjects = sanitizeProjects(DEFAULT_PROJECTS);
-      return cachedProjects;
-    }
+  .nav-row,
+  .section-head-split,
+  .footer-row {
+    align-items: start;
+    flex-direction: column;
   }
 
-  async function saveProject(project) {
-    const normalizedProject = normalizeProject(project);
-
-    if (supabaseClient) {
-      if (activeEditId) {
-        const { error } = await supabaseClient
-          .from("projects")
-          .update(normalizedProject)
-          .eq("id", activeEditId);
-
-        if (error) {
-          throw error;
-        }
-      } else {
-        const { error } = await supabaseClient.from("projects").insert([normalizedProject]);
-
-        if (error) {
-          throw error;
-        }
-      }
-
-      return;
-    }
-
-    const localProjects = getLocalProjects();
-
-    if (activeEditId) {
-      const nextProjects = localProjects.map((item) =>
-        item.id === activeEditId ? { ...item, ...normalizedProject, id: activeEditId } : item
-      );
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nextProjects));
-    } else {
-      const nextProjects = [...localProjects, { ...normalizedProject, id: String(Date.now()) }];
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nextProjects));
-    }
+  .main-nav {
+    justify-content: flex-start;
   }
 
-  async function deleteProject(id) {
-    if (supabaseClient) {
-      const { error } = await supabaseClient.from("projects").delete().eq("id", id);
-
-      if (error) {
-        throw error;
-      }
-
-      return;
-    }
-
-    const nextProjects = getLocalProjects().filter((project) => project.id !== id);
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nextProjects));
+  .hero-role-line {
+    width: 100%;
+    flex-wrap: wrap;
   }
 
-  async function resetProjects() {
-    if (supabaseClient) {
-      const { error: deleteError } = await supabaseClient
-        .from("projects")
-        .delete()
-        .neq("id", "00000000-0000-0000-0000-000000000000");
-
-      if (deleteError) {
-        throw deleteError;
-      }
-
-      const { error: insertError } = await supabaseClient.from("projects").insert(DEFAULT_PROJECTS);
-
-      if (insertError) {
-        throw insertError;
-      }
-
-      return;
-    }
-
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_PROJECTS));
+  .typed-role {
+    min-width: 0;
   }
 
-  let seedPromise = null;
-
-  async function seedIfNeeded() {
-    if (!supabaseClient) {
-      return;
-    }
-
-    if (!seedPromise) {
-      seedPromise = (async () => {
-        const { count, error } = await supabaseClient
-          .from("projects")
-          .select("*", { count: "exact", head: true });
-
-        if (error) {
-          throw error;
-        }
-
-        if (count === 0) {
-          const { error: insertError } = await supabaseClient.from("projects").insert(DEFAULT_PROJECTS);
-
-          if (insertError) {
-            throw insertError;
-          }
-        }
-      })().catch((error) => {
-        seedPromise = null;
-        throw error;
-      });
-    }
-
-    await seedPromise;
+  .skills-grid,
+  .projects-grid,
+  .projects-grid-full,
+  .principles-grid,
+  .admin-form-grid {
+    grid-template-columns: 1fr;
   }
 
-  function sanitizeProjects(projects) {
-    return (projects || []).map((project, index) => ({
-      id: String(project.id || index + 1),
-      title: project.title || "Untitled project",
-      description: project.description || "",
-      problem: project.problem || "",
-      architecture: project.architecture || "",
-      tech: Array.isArray(project.tech) ? project.tech : splitTech(project.tech),
-      category: (project.category || "fullstack").toLowerCase(),
-      github: normalizeUrl(project.github || "#"),
-      demo: normalizeUrl(project.demo || "#")
-    }));
+  .contact-grid {
+    padding: 1.35rem;
   }
 
-  function normalizeProject(project) {
-    return {
-      title: project.title.trim(),
-      description: project.description.trim(),
-      problem: project.problem.trim(),
-      architecture: project.architecture.trim(),
-      tech: splitTech(project.tech),
-      category: project.category.trim().toLowerCase(),
-      github: normalizeUrl(project.github.trim() || "#"),
-      demo: normalizeUrl(project.demo.trim() || "#")
-    };
+  .admin-item {
+    flex-direction: column;
   }
 
-  function splitTech(value) {
-    if (Array.isArray(value)) {
-      return value.filter(Boolean);
-    }
-
-    return String(value || "")
-      .split(",")
-      .map((item) => item.trim())
-      .filter(Boolean);
+  .admin-item-actions {
+    width: 100%;
   }
 
-  function normalizeUrl(url) {
-    if (!url || url === "#") {
-      return "#";
-    }
-
-    if (/^[a-zA-Z]+:\/\//.test(url)) {
-      return url;
-    }
-
-    return `https://${url}`;
+  .admin-item-actions button {
+    flex: 1;
   }
-
-  function initTyping() {
-    const typedRole = document.querySelector(".typed-role");
-
-    if (!typedRole) {
-      return;
-    }
-
-    const phrases = [
-      "backend systems",
-      "clean APIs",
-      "reliable fullstack products",
-      "realtime application flows"
-    ];
-
-    let phraseIndex = 0;
-    let letterIndex = 0;
-    let deleting = false;
-
-    function tick() {
-      const phrase = phrases[phraseIndex];
-
-      if (deleting) {
-        letterIndex -= 1;
-      } else {
-        letterIndex += 1;
-      }
-
-      typedRole.textContent = phrase.slice(0, letterIndex);
-
-      if (!deleting && letterIndex === phrase.length) {
-        deleting = true;
-        window.setTimeout(tick, 1400);
-        return;
-      }
-
-      if (deleting && letterIndex === 0) {
-        deleting = false;
-        phraseIndex = (phraseIndex + 1) % phrases.length;
-      }
-
-      window.setTimeout(tick, deleting ? 45 : 80);
-    }
-
-    tick();
-  }
-
-  function initReveal() {
-    const revealItems = document.querySelectorAll(".reveal");
-
-    if (!revealItems.length || !("IntersectionObserver" in window)) {
-      revealItems.forEach((item) => item.classList.add("visible"));
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.14 }
-    );
-
-    revealItems.forEach((item) => observer.observe(item));
-  }
-
-  function initContactForm() {
-    const form = document.getElementById("contact-form");
-
-    if (!form) {
-      return;
-    }
-
-    const submitButton = document.getElementById("submit-btn");
-    const statusNode = document.getElementById("form-status");
-
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
-
-      submitButton.disabled = true;
-      submitButton.textContent = "Sending...";
-      statusNode.textContent = "";
-
-      try {
-        const response = await fetch(form.action, {
-          method: "POST",
-          body: new FormData(form),
-          headers: { Accept: "application/json" }
-        });
-
-        const payload = await response.json();
-
-        if (response.ok && payload.success) {
-          statusNode.textContent = "Message sent successfully. I will get back to you soon.";
-          form.reset();
-        } else {
-          statusNode.textContent = payload.message || "Something went wrong. Please try again.";
-        }
-      } catch (error) {
-        statusNode.textContent = "Network error. Please check your connection and try again.";
-      } finally {
-        submitButton.disabled = false;
-        submitButton.textContent = "Send message";
-      }
-    });
-  }
-
-  async function initFeaturedProjects() {
-    const featuredGrid = document.getElementById("featured-projects-grid");
-
-    if (!featuredGrid) {
-      return;
-    }
-
-    const projects = await getProjects();
-    const featuredProjects = projects.slice(0, 3);
-
-    if (!featuredProjects.length) {
-      featuredGrid.innerHTML = `<div class="empty-state">Projects will appear here once you add them.</div>`;
-      return;
-    }
-
-    featuredGrid.innerHTML = featuredProjects.map(renderProjectCard).join("");
-  }
-
-  async function initProjectsPage() {
-    const projectsGrid = document.getElementById("projects-grid");
-
-    if (!projectsGrid) {
-      return;
-    }
-
-    const projects = await getProjects();
-    renderProjectsList(projects, "all");
-
-    document.querySelectorAll(".filter-btn").forEach((button) => {
-      button.addEventListener("click", () => {
-        document.querySelectorAll(".filter-btn").forEach((item) => item.classList.remove("active"));
-        button.classList.add("active");
-        renderProjectsList(projects, button.dataset.filter || "all");
-      });
-    });
-  }
-
-  function renderProjectsList(projects, filter) {
-    const projectsGrid = document.getElementById("projects-grid");
-
-    if (!projectsGrid) {
-      return;
-    }
-
-    const visibleProjects =
-      filter === "all" ? projects : projects.filter((project) => project.category === filter);
-
-    if (!visibleProjects.length) {
-      projectsGrid.innerHTML = `<div class="empty-state">No projects available in this category yet.</div>`;
-      return;
-    }
-
-    projectsGrid.innerHTML = visibleProjects
-      .map((project) => renderProjectCard(project, true))
-      .join("");
-  }
-
-  function renderProjectCard(project, detailed) {
-    const meta = (project.tech || [])
-      .slice(0, detailed ? project.tech.length : 3)
-      .map((item) => `<span>${escapeHtml(item)}</span>`)
-      .join("");
-
-    const detailBlock = detailed
-      ? `
-        <p><strong>Problem:</strong> ${escapeHtml(project.problem)}</p>
-        <p><strong>Architecture:</strong> ${escapeHtml(project.architecture)}</p>
-      `
-      : "";
-
-    return `
-      <article class="project-card">
-        <p class="project-category">${escapeHtml(project.category)}</p>
-        <h3 class="project-title">${escapeHtml(project.title)}</h3>
-        <p>${escapeHtml(project.description)}</p>
-        <div class="project-meta">${meta}</div>
-        ${detailBlock}
-        <div class="project-links">
-          <a href="${escapeAttribute(project.github)}" target="_blank" rel="noopener">Code</a>
-          <a href="${escapeAttribute(project.demo)}" target="_blank" rel="noopener">Live demo</a>
-        </div>
-      </article>
-    `;
-  }
-
-  function initAdminPanel() {
-    const unlockButton = document.getElementById("unlockBtn");
-    const passwordWrapper = document.getElementById("passwordWrapper");
-    const adminPanel = document.getElementById("adminPanel");
-
-    if (!unlockButton || !passwordWrapper || !adminPanel) {
-      return;
-    }
-
-    unlockButton.addEventListener("click", async () => {
-      const passwordInput = document.getElementById("adminPass");
-
-      if (passwordInput.value !== ADMIN_PASSWORD) {
-        window.alert("Incorrect password.");
-        return;
-      }
-
-      passwordWrapper.classList.add("hidden-panel");
-      adminPanel.classList.remove("hidden-panel");
-      await loadAdminProjects();
-    });
-
-    document.getElementById("addProjectBtn").addEventListener("click", handleAdminSave);
-    document.getElementById("resetDefaultsBtn").addEventListener("click", handleAdminReset);
-  }
-
-  async function loadAdminProjects() {
-    const projects = await getProjects();
-    renderAdminList(projects);
-  }
-
-  function renderAdminList(projects) {
-    const projectList = document.getElementById("projectList");
-
-    if (!projectList) {
-      return;
-    }
-
-    if (!projects.length) {
-      projectList.innerHTML = `<div class="empty-state">No projects yet.</div>`;
-      return;
-    }
-
-    projectList.innerHTML = projects
-      .map(
-        (project) => `
-          <article class="admin-item">
-            <div class="admin-item-copy">
-              <span class="admin-item-title">${escapeHtml(project.title)}</span>
-              <span class="admin-item-meta">${escapeHtml(project.category)} | ${escapeHtml(project.tech.join(", "))}</span>
-            </div>
-            <div class="admin-item-actions">
-              <button type="button" class="edit-btn" data-id="${escapeAttribute(project.id)}">Edit</button>
-              <button type="button" class="delete-btn" data-id="${escapeAttribute(project.id)}">Delete</button>
-            </div>
-          </article>
-        `
-      )
-      .join("");
-
-    projectList.querySelectorAll(".edit-btn").forEach((button) => {
-      button.addEventListener("click", () => populateAdminForm(button.dataset.id, projects));
-    });
-
-    projectList.querySelectorAll(".delete-btn").forEach((button) => {
-      button.addEventListener("click", async () => {
-        const shouldDelete = window.confirm("Delete this project?");
-
-        if (!shouldDelete) {
-          return;
-        }
-
-        try {
-          await deleteProject(button.dataset.id);
-          setAdminStatus("Project deleted.");
-          if (activeEditId === button.dataset.id) {
-            resetAdminForm();
-          }
-          await loadAdminProjects();
-        } catch (error) {
-          console.error(error);
-          setAdminStatus("Unable to delete the project right now.", true);
-        }
-      });
-    });
-  }
-
-  function populateAdminForm(id, projects) {
-    const project = projects.find((item) => item.id === id);
-
-    if (!project) {
-      return;
-    }
-
-    activeEditId = id;
-    document.getElementById("title").value = project.title;
-    document.getElementById("desc").value = project.description;
-    document.getElementById("problem").value = project.problem;
-    document.getElementById("arch").value = project.architecture;
-    document.getElementById("tech").value = project.tech.join(", ");
-    document.getElementById("category").value = project.category;
-    document.getElementById("github").value = project.github;
-    document.getElementById("demo").value = project.demo;
-    document.getElementById("addProjectBtn").textContent = "Update project";
-    setAdminStatus("Editing project. Save when you are done.");
-  }
-
-  async function handleAdminSave() {
-    const fields = readAdminFields();
-
-    if (!isValidProject(fields)) {
-      setAdminStatus("Please fill every field before saving.", true);
-      return;
-    }
-
-    try {
-      await saveProject(fields);
-      setAdminStatus(activeEditId ? "Project updated." : "Project added.");
-      resetAdminForm();
-      await loadAdminProjects();
-    } catch (error) {
-      console.error(error);
-      setAdminStatus("Unable to save the project right now.", true);
-    }
-  }
-
-  async function handleAdminReset() {
-    const shouldReset = window.confirm("Reset your portfolio projects to the default entries?");
-
-    if (!shouldReset) {
-      return;
-    }
-
-    try {
-      await resetProjects();
-      resetAdminForm();
-      setAdminStatus("Projects reset to defaults.");
-      await loadAdminProjects();
-    } catch (error) {
-      console.error(error);
-      setAdminStatus("Unable to reset projects right now.", true);
-    }
-  }
-
-  function readAdminFields() {
-    return {
-      title: document.getElementById("title").value,
-      description: document.getElementById("desc").value,
-      problem: document.getElementById("problem").value,
-      architecture: document.getElementById("arch").value,
-      tech: document.getElementById("tech").value,
-      category: document.getElementById("category").value,
-      github: document.getElementById("github").value,
-      demo: document.getElementById("demo").value
-    };
-  }
-
-  function isValidProject(project) {
-    return (
-      project.title.trim() &&
-      project.description.trim() &&
-      project.problem.trim() &&
-      project.architecture.trim() &&
-      splitTech(project.tech).length &&
-      project.category.trim()
-    );
-  }
-
-  function resetAdminForm() {
-    activeEditId = null;
-    document.getElementById("title").value = "";
-    document.getElementById("desc").value = "";
-    document.getElementById("problem").value = "";
-    document.getElementById("arch").value = "";
-    document.getElementById("tech").value = "";
-    document.getElementById("category").value = "frontend";
-    document.getElementById("github").value = "#";
-    document.getElementById("demo").value = "#";
-    document.getElementById("addProjectBtn").textContent = "Add project";
-  }
-
-  function setAdminStatus(message, isError) {
-    const statusNode = document.getElementById("adminFormStatus");
-
-    if (!statusNode) {
-      return;
-    }
-
-    statusNode.textContent = message;
-    statusNode.style.color = isError ? "#a23c2a" : "var(--success)";
-  }
-
-  function escapeHtml(value) {
-    return String(value || "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;");
-  }
-
-  function escapeAttribute(value) {
-    return escapeHtml(value);
-  }
-})();
+}
