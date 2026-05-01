@@ -3,315 +3,218 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ezeilo David Chisom · fullstack engineer</title>
-  <meta name="description" content="Senior fullstack developer specializing in backend systems, API design, real‑time architectures and clean frontend. View portfolio and projects.">
-  <meta name="keywords" content="fullstack developer, backend, frontend, API, real-time, database, React, Node.js">
+  <title>Ezeilo David Chisom | Fullstack Engineer</title>
+  <meta name="description" content="Portfolio of Ezeilo David Chisom, a fullstack engineer building reliable APIs, scalable backend systems, and thoughtful interfaces.">
   <meta name="author" content="Ezeilo David Chisom">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text x='0' y='14' font-size='14' fill='%232b6f9b'>⌨️</text></svg>">
-  <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&display=swap" rel="stylesheet">
-  <style>
-    /* Additional professional touches */
-    .hero-stats {
-      display: flex;
-      gap: 2rem;
-      margin: 2rem 0 1rem;
-    }
-    .stat-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--text-secondary);
-      font-size: 1rem;
-    }
-    .stat-item i {
-      color: var(--accent);
-    }
-    .scroll-indicator {
-      position: absolute;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      color: var(--text-secondary);
-      animation: bounce 2s infinite;
-      font-size: 1.5rem;
-    }
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
-      40% { transform: translateX(-50%) translateY(-10px); }
-      60% { transform: translateX(-50%) translateY(-5px); }
-    }
-    .about-highlight {
-      display: flex;
-      gap: 2rem;
-      margin-top: 2rem;
-      justify-content: center;
-    }
-    .highlight-item {
-      text-align: center;
-    }
-    .highlight-number {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--accent);
-    }
-    .highlight-label {
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-    }
-    .featured-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 2rem;
-    }
-    .featured-header .section-title {
-      margin-bottom: 0;
-    }
-    .view-all-link {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 500;
-      transition: var(--transition);
-    }
-    .view-all-link:hover {
-      gap: 0.5rem;
-      color: var(--accent-hover);
-    }
-    .contact-response {
-      margin-top: 1rem;
-      color: var(--text-secondary);
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .back-to-top {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background: var(--accent);
-      color: white;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      opacity: 0;
-      transition: var(--transition);
-      pointer-events: none;
-    }
-    .back-to-top.visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .back-to-top:hover {
-      background: var(--accent-hover);
-      transform: translateY(-2px);
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="site-header">
-    <div class="container nav-container">
-      <a href="index.html" class="logo"></a>
-      <h3>Fullstack Developer's Portfolio</h3>
-      <nav class="main-nav">
-        <ul>
-          <li><a href="index.html" class="nav-link active">Home</a></li>
-          <li><a href="projects.html" class="nav-link">Projects</a></li>
-          <li><a href="#contact" class="nav-link">Contact</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <main>
-    <!-- Hero Section with animated gradient background -->
-    <section id="home" class="hero section">
-      <div class="hero-bg"></div>
-      <div class="container hero-content">
-        <h1 class="hero-name">Ezeilo David Chisom</h1>
-        <div class="hero-role">
-          <span class="static-prefix">Can be your </span>
-          <span class="typed-role"></span><span class="cursor">|</span>
-     
-        </div>
-        <p class="hero-tagline">Crafting resilient backend services, clean APIs, and fluid frontend experiences.</p>
-        
-        <!-- Quick expertise strip -->
-        <div class="hero-stats">
-          <span class="stat-item"><i class="fas fa-server"></i> Backend Architect</span>
-          <span class="stat-item"><i class="fas fa-code"></i> API Designer</span>
-          <span class="stat-item"><i class="fas fa-bolt"></i> Real‑time Systems</span>
-        </div>
-
-        <a href="projects.html" class="btn btn-primary">View my projects <i class="fas fa-arrow-right"></i></a>
+  <div class="page-shell">
+    <header class="site-header">
+      <div class="container nav-row">
+        <a href="index.html" class="brand-mark">David<span>.</span></a>
+        <nav class="main-nav" aria-label="Primary navigation">
+          <a href="#about">About</a>
+          <a href="#skills">Skills</a>
+          <a href="#work">Projects</a>
+          <a href="#contact">Contact</a>
+          <a href="projects.html" class="nav-pill">All Projects</a>
+        </nav>
       </div>
-      <!-- Scroll down indicator -->
-      <a href="#about" class="scroll-indicator"><i class="fas fa-chevron-down"></i></a>
-    </section>
+    </header>
 
-    <!-- About Section -->
-    <section id="about" class="about section fade-in">
-      <div class="container">
-        <h2 class="section-title">About me</h2>
-        <div class="about-card">
-          <p class="about-text">
-            I design and build fullstack systems that scale. With a deep focus on backend architecture, I develop RESTful and real‑time APIs, optimize database performance, and construct frontend interfaces that feel invisible — because great UI is about clarity, not decoration. I thrive on turning complex requirements into clean, maintainable code. Whether it's microservices, event‑driven flows, or responsive component libraries, I bring a mature engineering mindset.
-          </p>
-        </div>
-        <!-- Highlight numbers for credibility -->
-        <div class="about-highlight">
-          <div class="highlight-item">
-            <div class="highlight-number">5+</div>
-            <div class="highlight-label">Years Experience</div>
+    <main>
+      <section class="hero section">
+        <div class="container hero-grid">
+          <div class="hero-copy reveal">
+            <p class="eyebrow">Fullstack Engineer</p>
+            <h1>I build dependable digital products with clean architecture and clear user experience.</h1>
+            <p class="hero-summary">
+              I help teams turn rough ideas into production-ready software, with a strong focus on backend systems,
+              API design, data flow, and interfaces that stay simple under pressure.
+            </p>
+            <div class="hero-role-line">
+              <span class="role-label">Focused on</span>
+              <span class="typed-role" aria-live="polite"></span>
+            </div>
+            <div class="hero-actions">
+              <a href="projects.html" class="btn btn-primary">See my work</a>
+              <a href="#contact" class="btn btn-secondary">Start a conversation</a>
+            </div>
+            <ul class="hero-points">
+              <li>Backend architecture that scales cleanly</li>
+              <li>Frontend experiences that feel intentional</li>
+              <li>Product thinking, not just code delivery</li>
+            </ul>
           </div>
-          <div class="highlight-item">
-            <div class="highlight-number">15+</div>
-            <div class="highlight-label">Projects Delivered</div>
-          </div>
-          <div class="highlight-item">
-            <div class="highlight-number">100%</div>
-            <div class="highlight-label">Client Satisfaction</div>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- Skills Section (modern chip design) -->
-    <section id="skills" class="skills section fade-in">
-      <div class="container">
-        <h2 class="section-title">Technical expertise</h2>
-        <div class="skills-grid">
-          <div class="skill-card">
-            <h3 class="skill-category"><i class="fas fa-code"></i> Frontend</h3>
-            <div class="skill-chips">
-              <span class="chip">React / Next.js</span>
-              <span class="chip">TypeScript</span>
-              <span class="chip">Vue / Svelte</span>
-              <span class="chip">Tailwind / SCSS</span>
-              <span class="chip">Web accessibility</span>
+          <aside class="hero-panel reveal">
+            <div class="hero-panel-card">
+              <p class="panel-label">Current value</p>
+              <h2>Shipping strong foundations for modern web products.</h2>
+              <div class="hero-metrics">
+                <div>
+                  <span class="metric-value">5+</span>
+                  <span class="metric-name">Years learning and building</span>
+                </div>
+                <div>
+                  <span class="metric-value">15+</span>
+                  <span class="metric-name">Projects explored end to end</span>
+                </div>
+                <div>
+                  <span class="metric-value">24h</span>
+                  <span class="metric-name">Typical response window</span>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="about" class="section">
+        <div class="container about-grid reveal">
+          <div>
+            <p class="eyebrow">About</p>
+            <h2 class="section-title">A builder who cares about structure, clarity, and finish.</h2>
+          </div>
+          <div class="section-copy">
+            <p>
+              I enjoy building products that work well under real usage, not just in demos. That means thoughtful data
+              models, maintainable APIs, clean component systems, and interfaces that guide people naturally.
+            </p>
+            <p>
+              My strength sits at the intersection of engineering and product sense. I like solving the hard technical
+              parts while still keeping the final experience elegant, fast, and easy to trust.
+            </p>
+          </div>
+        </div>
+
+        <div class="container principles-grid reveal">
+          <article class="principle-card">
+            <p class="card-kicker">01</p>
+            <h3>Architecture first</h3>
+            <p>I design with reliability and growth in mind so the product does not collapse when usage increases.</p>
+          </article>
+          <article class="principle-card">
+            <p class="card-kicker">02</p>
+            <h3>User clarity</h3>
+            <p>I keep interfaces direct and useful, with less noise and more confidence for the person using them.</p>
+          </article>
+          <article class="principle-card">
+            <p class="card-kicker">03</p>
+            <h3>Delivery mindset</h3>
+            <p>I like moving ideas from concept to working product with strong attention to detail all the way through.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="skills" class="section section-soft">
+        <div class="container">
+          <div class="section-head reveal">
+            <p class="eyebrow">Skills</p>
+            <h2 class="section-title">The stack I use to turn ideas into shipped products.</h2>
+          </div>
+          <div class="skills-grid reveal">
+            <article class="skill-card">
+              <h3>Frontend</h3>
+              <ul>
+                <li>React and Next.js</li>
+                <li>TypeScript</li>
+                <li>Responsive UI systems</li>
+                <li>Accessible interaction patterns</li>
+              </ul>
+            </article>
+            <article class="skill-card">
+              <h3>Backend</h3>
+              <ul>
+                <li>Node.js and Express</li>
+                <li>Python and FastAPI</li>
+                <li>REST and realtime APIs</li>
+                <li>PostgreSQL, MongoDB, Redis</li>
+              </ul>
+            </article>
+            <article class="skill-card">
+              <h3>Delivery</h3>
+              <ul>
+                <li>System design and architecture</li>
+                <li>Database planning</li>
+                <li>Deployment workflows</li>
+                <li>Performance and maintainability</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="work" class="section">
+        <div class="container">
+          <div class="section-head section-head-split reveal">
+            <div>
+              <p class="eyebrow">Selected Work</p>
+              <h2 class="section-title">Projects that show how I think and build.</h2>
+            </div>
+            <a href="projects.html" class="text-link">Browse everything</a>
+          </div>
+          <div class="projects-grid reveal" id="featured-projects-grid"></div>
+        </div>
+      </section>
+
+      <section id="contact" class="section section-soft">
+        <div class="container contact-grid reveal">
+          <div class="contact-copy">
+            <p class="eyebrow">Contact</p>
+            <h2 class="section-title">If you need a thoughtful engineer, let&apos;s talk.</h2>
+            <p>
+              I am open to freelance work, product collaborations, and full-time opportunities where strong backend and
+              fullstack execution matter.
+            </p>
+            <div class="contact-list">
+              <a href="mailto:ezeilodavid292@gmail.com">ezeilodavid292@gmail.com</a>
+              <a href="https://github.com/efgfdsdfdf" target="_blank" rel="noopener">GitHub</a>
+              <span>LinkedIn profile available on request</span>
+              <span>Lagos, Nigeria</span>
             </div>
           </div>
-          <div class="skill-card">
-            <h3 class="skill-category"><i class="fas fa-server"></i> Backend</h3>
-            <div class="skill-chips">
-              <span class="chip">Node.js (Express, Fastify)</span>
-              <span class="chip">Python (Django, FastAPI)</span>
-              <span class="chip">Go (Gorilla, Chi)</span>
-              <span class="chip">PostgreSQL / MongoDB</span>
-              <span class="chip">Redis / RabbitMQ</span>
-            </div>
-          </div>
-          <div class="skill-card">
-            <h3 class="skill-category"><i class="fas fa-tools"></i> Tools & DevOps</h3>
-            <div class="skill-chips">
-              <span class="chip">Docker / Kubernetes</span>
-              <span class="chip">CI/CD (GitHub Actions)</span>
-              <span class="chip">AWS (EC2, Lambda)</span>
-              <span class="chip">Git / monorepos</span>
-              <span class="chip">Prometheus / Grafana</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- Featured Projects -->
-    <section id="featured-projects" class="featured section fade-in">
-      <div class="container">
-        <div class="featured-header">
-          <h2 class="section-title">Featured projects</h2>
-          <a href="projects.html" class="view-all-link">View all <i class="fas fa-arrow-right"></i></a>
-        </div>
-        <div class="projects-grid featured-grid" id="featured-projects-grid">
-          <!-- filled by js with first 3 projects -->
-        </div>
-      </div>
-    </section>
-
-    <!-- Contact Section (improved form) -->
-    <section id="contact" class="contact section fade-in">
-      <div class="container">
-        <h2 class="section-title">Let’s work together</h2>
-        <div class="contact-grid">
-          <div class="contact-info">
-            <p><i class="fas fa-envelope"></i> ezeilodavid292@gmail.com</p>
-            <p><i class="fab fa-github"></i> <a href="https://github.com/efgfdsdfdf" target="_blank">/efgfdsdfdf</a></p>
-            <p><i class="fab fa-linkedin"></i> <a href="#" target="_blank">LinkedIn</a></p>
-            <p><i class="fab fa-whatsapp"></i> +234-90-152-067-91</p>
-            <div class="contact-response">
-              <i class="fas fa-clock"></i> Usually responds within 24 hours
-            </div>
-          </div>
           <form class="contact-form" id="contact-form" action="https://formsubmit.co/ezeilodavid292@gmail.com" method="POST">
-            <!-- Honeypot -->
-            <input type="text" name="_honey" style="display:none">
+            <input type="text" name="_honey" class="hidden-field">
             <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_subject" value="Portfolio enquiry from website">
 
-            <div class="form-group floating-label">
-              <input type="text" id="name" name="name" placeholder=" " required>
-              <label for="name">Name</label>
-            </div>
-            <div class="form-group floating-label">
-              <input type="email" id="email" name="email" placeholder=" " required>
-              <label for="email">Email</label>
-            </div>
-            <div class="form-group floating-label">
-              <textarea id="message" name="message" rows="3" placeholder=" " required></textarea>
-              <label for="message">Message</label>
-            </div>
-            <button type="submit" class="btn btn-secondary">Send message <i class="fas fa-paper-plane"></i></button>
-            <div id="form-status" style="margin-top: 1rem; color: var(--accent);"></div>
+            <label>
+              <span>Name</span>
+              <input type="text" id="name" name="name" placeholder="Your name" required>
+            </label>
+            <label>
+              <span>Email</span>
+              <input type="email" id="email" name="email" placeholder="you@example.com" required>
+            </label>
+            <label>
+              <span>Message</span>
+              <textarea id="message" name="message" rows="5" placeholder="Tell me a little about the project or role." required></textarea>
+            </label>
+            <button type="submit" class="btn btn-primary" id="submit-btn">Send message</button>
+            <p id="form-status" class="form-status" aria-live="polite"></p>
           </form>
         </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-row">
+        <p>Built by Ezeilo David Chisom.</p>
+        <div class="footer-links">
+          <a href="projects.html">Projects</a>
+          <a href="admin.html">Admin</a>
+        </div>
       </div>
-    </section>
-  </main>
+    </footer>
+  </div>
 
-  <footer class="site-footer">
-    <div class="container footer-container">
-      <p>© 2025 Ezeilo David Chisom · fullstack engineer</p>
-      <div class="footer-links">
-        <a href="https://github.com/efgfdsdfdf" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
-        <a href="#" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-        <a href="admin.html" class="admin-link" aria-label="Admin">⚙️</a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Back to top button -->
-  <a href="#" class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></a>
-
-  <!-- Supabase client library -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <!-- Your main script -->
   <script src="script.js"></script>
-  <script>
-    // Back to top visibility
-    window.addEventListener('scroll', function() {
-      const backToTop = document.getElementById('backToTop');
-      if (window.scrollY > 300) {
-        backToTop.classList.add('visible');
-      } else {
-        backToTop.classList.remove('visible');
-      }
-    });
-
-    // Smooth scroll for back to top
-    document.getElementById('backToTop').addEventListener('click', function(e) {
-      e.preventDefault();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  </script>
 </body>
 </html>
-
-
