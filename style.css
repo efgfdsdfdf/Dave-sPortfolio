@@ -375,12 +375,64 @@ p {
   font-size: 0.95rem;
 }
 
-.about-grid,
 .contact-grid {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   gap: 2rem;
   align-items: start;
+}
+
+.about-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr);
+  gap: 4.5rem;
+  align-items: center;
+}
+
+.about-image-wrapper {
+  position: relative;
+  z-index: 1;
+}
+
+.about-profile-image {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+  position: relative;
+  z-index: 2;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.about-image-backdrop {
+  position: absolute;
+  inset: 1.5rem -1.5rem -1.5rem 1.5rem;
+  border-radius: var(--radius-xl);
+  background: rgba(169, 91, 49, 0.08);
+  border: 1px solid rgba(169, 91, 49, 0.15);
+  z-index: 0;
+  transition: transform 0.3s ease;
+}
+
+.about-image-wrapper:hover .about-image-backdrop {
+  transform: translate(-0.5rem, -0.5rem);
+}
+
+.about-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .about-layout {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+  .about-image-backdrop {
+    inset: 1rem -1rem -1rem 1rem;
+  }
 }
 
 .section-copy {
