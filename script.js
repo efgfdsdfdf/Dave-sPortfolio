@@ -48,6 +48,36 @@
   initFeaturedProjects();
   initProjectsPage();
   initAdminPanel();
+  initSecretDoor();
+
+  function initSecretDoor() {
+    const door = document.getElementById("secret-door");
+    if (door) {
+      door.style.cursor = "pointer";
+      let clicks = 0;
+      let timer;
+      door.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        clicks++;
+        clearTimeout(timer);
+        if (clicks === 3) {
+          window.location.href = "admin.html";
+        } else {
+          timer = setTimeout(() => { clicks = 0; }, 1000);
+        }
+      });
+    }
+
+    let secretCode = "";
+    window.addEventListener("keydown", (e) => {
+      secretCode += e.key.toLowerCase();
+      if (secretCode.endsWith("admin")) {
+        window.location.href = "admin.html";
+      }
+      if (secretCode.length > 10) secretCode = secretCode.slice(-10);
+    });
+  }
 
   function createSupabaseClient() {
     if (!window.supabase || typeof window.supabase.createClient !== "function") {
