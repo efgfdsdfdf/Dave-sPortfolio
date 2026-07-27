@@ -1,6 +1,6 @@
 (function () {
-  const SUPABASE_URL = "https://qrfgrfflkpudefcsbndn.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFyZmdyZmZsa3B1ZGVmY3NibmRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyMzE0NDQsImV4cCI6MjA4ODgwNzQ0NH0.CzTNuVWK2d9cwvAqSfE4IT2j3N14DORnpCqL__Z-Gdw";
+  const SUPABASE_URL = "https://retnizmmxqffrqmkbbwt.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJldG5pem1teHFmZnJxbWtiYnd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxNTQ1MjcsImV4cCI6MjEwMDczMDUyN30.naITneJ4BlSI10BupfwtMR2KedDkNPKjknbPcuR_ZDo";
   const STORAGE_KEY = "portfolio_projects";
   const ADMIN_PASSWORD = "dev123";
 
