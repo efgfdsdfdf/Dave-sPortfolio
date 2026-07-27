@@ -40,6 +40,7 @@
   const supabaseClient = createSupabaseClient();
   let cachedProjects = [];
   let activeEditId = null;
+  let seedPromise = null;
 
   initReveal();
   initTyping();
@@ -176,8 +177,6 @@
 
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_PROJECTS));
   }
-
-  let seedPromise = null;
 
   async function seedIfNeeded() {
     if (!supabaseClient) {
