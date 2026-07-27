@@ -559,8 +559,8 @@ p {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 0.35rem 0.75rem;
-  background: var(--accent);
-  color: #fff;
+  background: rgba(169, 91, 49, 0.12); /* Light tint of accent */
+  color: var(--accent-deep);
   border-radius: 999px;
   margin-bottom: 0.25rem;
 }
