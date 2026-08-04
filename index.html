@@ -41,7 +41,10 @@
               <span class="typed-role" aria-live="polite"></span>
             </div>
             <div class="hero-actions">
-              <a href="projects.html" class="btn btn-primary">See my work</a>
+              <button id="open-checkout-btn" class="btn btn-primary" style="background: var(--accent); color: white; border: none; box-shadow: 0 4px 15px rgba(169, 91, 49, 0.4);">
+                Buy Mr David AI (₦20k)
+              </button>
+              <a href="projects.html" class="btn btn-secondary">See my work</a>
               <a href="#contact" class="btn btn-secondary">Start a conversation</a>
             </div>
             <ul class="hero-points">
@@ -219,6 +222,36 @@
     </footer>
   </div>
 
+  <div class="modal-overlay" id="checkout-modal">
+    <div class="modal-content checkout-content">
+      <button class="modal-close" id="close-checkout-btn" aria-label="Close modal">&times;</button>
+      <div class="checkout-header">
+        <h2 class="section-title" style="margin-bottom: 0.5rem;">Mr David AI Agent</h2>
+        <p class="project-category" style="margin-bottom: 1.5rem;">Voice Controlled Desktop Assistant</p>
+      </div>
+      
+      <div class="checkout-body">
+        <p style="margin-bottom: 1rem; color: var(--muted);">Control your full desktop or laptop using natural voice commands. Complete your purchase to download the secure executable immediately.</p>
+        <div class="price-tag" style="font-size: 1.8rem; font-weight: 700; color: var(--text); margin-bottom: 2rem;">
+          ₦20,000
+        </div>
+        
+        <form id="paystack-form">
+          <label>
+            <span>Your Email (for receipt)</span>
+            <input type="email" id="customer-email" placeholder="you@example.com" required style="margin-bottom: 1rem; width: 100%;">
+          </label>
+          <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; background: var(--accent); border: none;">Pay securely with Paystack</button>
+        </form>
+        <p id="checkout-status" class="form-status" style="text-align: center; margin-top: 1rem;" aria-live="polite"></p>
+        
+        <!-- Hidden link triggered automatically after payment -->
+        <a id="hidden-download-link" href="mr_david.exe" download="mr_david.exe" style="display: none;">Download</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://js.paystack.co/v1/inline.js"></script>
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="script.js"></script>
 </body>

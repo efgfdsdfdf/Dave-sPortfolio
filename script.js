@@ -49,6 +49,64 @@
   initProjectsPage();
   initAdminPanel();
   initSecretDoor();
+  initCheckout();
+
+  function initCheckout() {
+    const openBtn = document.getElementById("open-checkout-btn");
+    const closeBtn = document.getElementById("close-checkout-btn");
+    const modal = document.getElementById("checkout-modal");
+    const form = document.getElementById("paystack-form");
+    const statusEl = document.getElementById("checkout-status");
+    const downloadLink = document.getElementById("hidden-download-link");
+
+    if (!openBtn || !modal) return;
+
+    openBtn.addEventListener("click", () => {
+      modal.classList.add("active");
+    });
+
+    closeBtn.addEventListener("click", () => {
+      modal.classList.remove("active");
+    });
+
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.classList.remove("active");
+      }
+    });
+
+    if (form) {
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const email = document.getElementById("customer-email").value;
+        if (!email) return;
+
+        statusEl.textContent = "Processing payment...";
+        statusEl.className = "form-status form-status-success";
+
+        const handler = PaystackPop.setup({
+          key: "pk_live_be8fc1620f7a377f14be7622e93ce06d1426f2e3", // Live Key
+          email: email,
+          amount: 20000 * 100, // 20k NGN in kobo
+          currency: "NGN",
+          callback: function (response) {
+            statusEl.textContent = "Payment successful! Downloading your agent...";
+            // Trigger the download automatically
+            downloadLink.click();
+            setTimeout(() => {
+              modal.classList.remove("active");
+              statusEl.textContent = "";
+            }, 3000);
+          },
+          onClose: function () {
+            statusEl.textContent = "Payment window closed.";
+            statusEl.className = "form-status form-status-error";
+          }
+        });
+        handler.openIframe();
+      });
+    }
+  }
 
   function initSecretDoor() {
     const door = document.getElementById("secret-door");
