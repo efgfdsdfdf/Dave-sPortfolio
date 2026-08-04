@@ -76,10 +76,37 @@
     });
 
     if (form) {
-      form.addEventListener("submit", (e) => {
+      form.addEventListener("submit", async (e) => {
         e.preventDefault();
         const email = document.getElementById("customer-email").value;
         if (!email) return;
+
+        statusEl.textContent = "Checking access...";
+        statusEl.className = "form-status";
+
+        try {
+          if (supabaseClient) {
+            const { data, error } = await supabaseClient
+              .from("free_emails")
+              .select("email")
+              .eq("email", email.toLowerCase())
+              .single();
+
+            if (data) {
+              statusEl.textContent = "Free access granted! Downloading your agent...";
+              statusEl.className = "form-status form-status-success";
+              downloadLink.click();
+              setTimeout(() => {
+                modal.classList.remove("active");
+                statusEl.textContent = "";
+              }, 3000);
+              return;
+            }
+          }
+        } catch (err) {
+          // If table doesn't exist or error, ignore and proceed to Paystack
+          console.error(err);
+        }
 
         statusEl.textContent = "Processing payment...";
         statusEl.className = "form-status form-status-success";
@@ -562,10 +589,83 @@
       passwordWrapper.classList.add("hidden-panel");
       adminPanel.classList.remove("hidden-panel");
       await loadAdminProjects();
+      await loadFreeEmails();
     });
 
     document.getElementById("addProjectBtn").addEventListener("click", handleAdminSave);
     document.getElementById("resetDefaultsBtn").addEventListener("click", handleAdminReset);
+    
+    const addFreeEmailBtn = document.getElementById("addFreeEmailBtn");
+    if (addFreeEmailBtn) {
+      addFreeEmailBtn.addEventListener("click", async () => {
+        const input = document.getElementById("freeEmailInput");
+        const email = input.value.trim().toLowerCase();
+        if (!email) return;
+        
+        try {
+          const { error } = await supabaseClient.from("free_emails").insert([{ email }]);
+          if (error) throw error;
+          document.getElementById("freeEmailStatus").textContent = "Email added.";
+          document.getElementById("freeEmailStatus").style.color = "var(--success)";
+          input.value = "";
+          await loadFreeEmails();
+        } catch (err) {
+          console.error(err);
+          document.getElementById("freeEmailStatus").textContent = "Error adding email.";
+          document.getElementById("freeEmailStatus").style.color = "#a23c2a";
+        }
+      });
+    }
+  }
+
+  async function loadFreeEmails() {
+    if (!supabaseClient) return;
+    const { data, error } = await supabaseClient.from("free_emails").select("email");
+    if (error) {
+      console.error(error);
+      return;
+    }
+    
+    const list = document.getElementById("freeEmailList");
+    if (!list) return;
+
+    if (!data || data.length === 0) {
+      list.innerHTML = `<div class="empty-state">No free emails yet.</div>`;
+      return;
+    }
+
+    list.innerHTML = data
+      .map(
+        (item) => `
+          <article class="admin-item">
+            <div class="admin-item-copy">
+              <span class="admin-item-title">${escapeHtml(item.email)}</span>
+            </div>
+            <div class="admin-item-actions">
+              <button type="button" class="delete-email-btn delete-btn" data-email="${escapeAttribute(item.email)}">Revoke</button>
+            </div>
+          </article>
+        `
+      )
+      .join("");
+
+    list.querySelectorAll(".delete-email-btn").forEach((button) => {
+      button.addEventListener("click", async () => {
+        const email = button.dataset.email;
+        if (!window.confirm(`Revoke free access for ${email}?`)) return;
+        
+        try {
+          await supabaseClient.from("free_emails").delete().eq("email", email);
+          document.getElementById("freeEmailStatus").textContent = "Email revoked.";
+          document.getElementById("freeEmailStatus").style.color = "var(--success)";
+          await loadFreeEmails();
+        } catch (err) {
+          console.error(err);
+          document.getElementById("freeEmailStatus").textContent = "Error revoking email.";
+          document.getElementById("freeEmailStatus").style.color = "#a23c2a";
+        }
+      });
+    });
   }
 
   async function loadAdminProjects() {

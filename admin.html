@@ -113,6 +113,25 @@
                 <div id="projectList" class="admin-list"></div>
               </section>
             </div>
+            <div class="admin-grid" style="margin-top: 2rem;">
+              <section class="admin-card">
+                <div class="admin-card-head">
+                  <div>
+                    <p class="eyebrow">Free Access</p>
+                    <h2 class="section-title">Whitelisted Emails</h2>
+                  </div>
+                  <p id="freeEmailStatus" class="admin-status" aria-live="polite"></p>
+                </div>
+                <div class="admin-form-grid" style="grid-template-columns: 1fr auto; align-items: end; margin-bottom: 2rem;">
+                  <label style="margin-bottom: 0;">
+                    <span>Add email for free access</span>
+                    <input type="email" id="freeEmailInput" placeholder="user@example.com">
+                  </label>
+                  <button id="addFreeEmailBtn" class="btn btn-primary" style="height: 3.15rem;">Grant Access</button>
+                </div>
+                <div id="freeEmailList" class="admin-list"></div>
+              </section>
+            </div>
           </div>
         </div>
       </section>
