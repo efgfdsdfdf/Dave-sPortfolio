@@ -990,3 +990,82 @@ p {
   color: var(--text);
 }
 
+
+/* Mr David AI Product Page Styles */
+body.dark-theme {
+  background-color: #050505;
+  color: #e0e0e0;
+}
+
+.site-header-dark {
+  background: rgba(5, 5, 5, 0.85);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.brand-mark-light {
+  color: #fff;
+}
+
+.main-nav-light a {
+  color: #a1a9b7;
+}
+
+.main-nav-light a:hover {
+  color: #fff;
+}
+
+.ai-hero-content {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ai-headline {
+  font-size: 3.5rem;
+  line-height: 1.1;
+  color: #fff;
+  margin: 1rem 0;
+  letter-spacing: -0.02em;
+}
+
+.ai-subheadline {
+  font-size: 1.25rem;
+  color: #a1a9b7;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+.ai-eyebrow {
+  color: #00c2ff;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.85rem;
+}
+
+.ai-buy-btn {
+  background: #00c2ff;
+  color: #000;
+  border: none;
+  font-size: 1.1rem;
+  padding: 1rem 2rem;
+  box-shadow: 0 4px 20px rgba(0, 194, 255, 0.3);
+}
+
+.ai-buy-btn:hover {
+  background: #00a0d6;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(0, 194, 255, 0.4);
+}
+
+.section-soft-dark {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.ai-tech-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
