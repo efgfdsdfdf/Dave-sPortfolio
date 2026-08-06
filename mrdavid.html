@@ -11,134 +11,150 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="dark-theme">
+  <!-- Ambient Animated Background -->
+  <div class="ambient-bg">
+    <div class="glow-orb" style="background: rgba(255, 140, 0, 0.15); width: 600px; height: 600px; top: -200px; left: -100px; animation-delay: 0s;"></div>
+    <div class="glow-orb" style="background: rgba(255, 179, 71, 0.1); width: 500px; height: 500px; top: 40%; right: -150px; animation-delay: -5s;"></div>
+    <div class="glow-orb" style="background: rgba(255, 115, 0, 0.1); width: 800px; height: 800px; bottom: -300px; left: 20%; animation-delay: -10s;"></div>
+  </div>
+
   <div class="page-shell">
-    <header class="site-header site-header-dark">
+    <header class="site-header site-header-dark" style="position: sticky; top: 0; z-index: 100;">
       <div class="container nav-row">
-        <a href="index.html" class="brand-mark brand-mark-light">David<span id="secret-door" style="color: #ffb347;">.</span></a>
+        <a href="index.html" class="brand-mark brand-mark-light">David<span id="secret-door" style="color: #ffb347; text-shadow: 0 0 10px #ffb347;">.</span></a>
         <nav class="main-nav main-nav-light" aria-label="Primary navigation">
           <a href="index.html">Home</a>
           <a href="projects.html">Projects</a>
-          <a href="mrdavid.html" class="nav-pill nav-pill-active" style="background: rgba(255, 179, 71, 0.15); color: #ffb347;">Mr David AI</a>
+          <a href="mrdavid.html" class="nav-pill nav-pill-active" style="background: rgba(255, 179, 71, 0.15); color: #ffb347; border: 1px solid rgba(255, 179, 71, 0.3);">Mr David AI</a>
         </nav>
       </div>
     </header>
 
     <main class="ai-product-page">
       <!-- HERO SECTION -->
-      <section class="ai-hero section" style="background: radial-gradient(circle at center top, rgba(255, 140, 0, 0.15), transparent 60%);">
+      <section class="ai-hero section">
         <div class="container ai-hero-content reveal">
           <p class="ai-eyebrow">Introducing Mr David AI</p>
-          <h1 class="ai-headline" style="font-family: 'Fraunces', serif; font-weight: 600;">The most secure, autonomous, and intuitive AI voice assistant for Windows.</h1>
+          <h1 class="ai-headline">The most secure, autonomous <br>AI voice assistant for Windows.</h1>
           <p class="ai-subheadline">
             Built entirely by Ezeilo David Chisom. Mr David isn't just a chatbot—he is a fully integrated desktop companion that sees your screen, learns your habits, and controls your PC, all while locked behind military-grade voice biometrics.
           </p>
-          <div class="hero-actions" style="justify-content: center; margin-top: 2.5rem;">
-            <button id="open-checkout-btn" class="btn btn-primary ai-buy-btn">
-              Buy Now - ₦20,000
+          <div class="hero-actions" style="justify-content: center; margin-top: 3.5rem;">
+            <button id="open-checkout-btn" class="ai-buy-btn-master">
+              Get Early Access - ₦20,000
             </button>
           </div>
         </div>
-        <div class="container ai-hero-image-wrapper reveal" style="text-align: center; margin-top: 4rem;">
-          <div style="position: relative; display: inline-block;">
-            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; background: radial-gradient(circle, rgba(255, 140, 0, 0.4) 0%, transparent 70%); filter: blur(40px); z-index: -1;"></div>
-            <img src="assets/new_orb.jpg" alt="Mr David AI Orb Interface" class="ai-hero-image" style="max-width: 100%; border-radius: 20px; box-shadow: 0 30px 60px rgba(0,0,0,0.6); border: 1px solid rgba(255, 180, 100, 0.2);">
-          </div>
+        
+        <!-- Hero Graphic -->
+        <div class="container reveal" style="text-align: center; margin-top: 6rem; position: relative;">
+          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; height: 80%; background: radial-gradient(circle, rgba(255, 140, 0, 0.5) 0%, transparent 60%); filter: blur(60px); z-index: -1;"></div>
+          <img src="assets/new_orb.jpg" alt="Mr David AI Orb Interface" style="max-width: 100%; border-radius: 32px; box-shadow: 0 40px 80px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.1); border: 1px solid rgba(255, 180, 100, 0.2); transform: perspective(1000px) rotateX(2deg);">
         </div>
       </section>
 
       <!-- VALUE PROP -->
-      <section class="ai-value-prop section section-soft-dark" style="border-top: 1px solid rgba(255, 180, 100, 0.1); border-bottom: 1px solid rgba(255, 180, 100, 0.1);">
+      <section class="ai-value-prop section" style="padding-top: 2rem;">
         <div class="container text-center reveal">
-          <h2 class="section-title" style="font-family: 'Fraunces', serif; color: #ffecd6;">Beyond the Browser.</h2>
-          <p class="section-copy" style="max-width: 800px; margin: 0 auto; font-size: 1.25rem; color: #b5aba0;">
+          <h2 class="bento-title" style="font-size: 2.5rem; color: #ffecd6;">Beyond the Browser.</h2>
+          <p class="bento-text" style="max-width: 800px; margin: 0 auto; font-size: 1.3rem;">
             Most AI assistants live in a web browser and can only answer questions. Mr David lives directly on your Windows desktop. He has native access to open your apps, type on your keyboard, scroll your web pages, and memorize your workflows without ever breaking your focus.
           </p>
         </div>
       </section>
 
-      <!-- FEATURES -->
-      <section class="ai-features section" style="background: radial-gradient(circle at right center, rgba(255, 140, 0, 0.05), transparent 50%);">
+      <!-- BENTO BOX FEATURES -->
+      <section class="ai-features section" style="padding-top: 0;">
         <div class="container">
-          <div class="section-head reveal text-center">
-            <h2 class="section-title" style="font-family: 'Fraunces', serif; color: #ffecd6;">Engineered for absolute control.</h2>
-          </div>
-          
-          <div class="ai-feature-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-top: 4rem;">
-            <!-- Feature 1 -->
-            <article class="ai-feature-card reveal" style="background: rgba(255, 255, 255, 0.02); padding: 2.5rem; border-radius: 20px; border: 1px solid rgba(255, 180, 100, 0.1); backdrop-filter: blur(10px); transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 30px rgba(255, 140, 0, 0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-              <div class="ai-feature-text">
-                <h3 style="margin-bottom: 1rem; color: #ffecd6; font-family: 'Fraunces', serif; font-size: 1.5rem;">🎙️ Total Voice Control</h3>
-                <p style="color: #b5aba0; line-height: 1.7;">Trigger Mr David simply by saying his name. Tell him to open applications, search the web, type emails, or scroll pages—he physically executes system commands instantly on your machine.</p>
+          <div class="bento-grid reveal" id="bento-container">
+            
+            <!-- Dashboard / Privacy / Memory (Spans full width) -->
+            <article class="bento-card bento-wide" style="display: grid; grid-template-columns: 1fr; text-align: center;">
+              <div class="bento-content">
+                <h3 class="bento-title" style="font-size: 2rem;">Total System Awareness</h3>
+                <p class="bento-text" style="max-width: 800px; margin: 0 auto 2rem auto;">
+                  The ultimate Command Center. Mr David continuously monitors your system for threats while cataloging your workflows to predict exactly what you need next.
+                </p>
+                <div class="bento-image-wrapper">
+                  <img src="assets/new_dashboard.jpg" alt="Command Center Dashboard">
+                </div>
+                
+                <!-- Inner micro-grid for the 3 sub-features -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; text-align: left; margin-top: 3rem;">
+                  <div>
+                    <h4 style="color: #ffecd6; margin-bottom: 0.5rem; font-size: 1.2rem;">🛡️ Privacy Guardian</h4>
+                    <p class="bento-text" style="font-size: 0.95rem;">Silently monitors background processes, network ports, and clipboard modifications to block spyware in real-time.</p>
+                  </div>
+                  <div>
+                    <h4 style="color: #ffecd6; margin-bottom: 0.5rem; font-size: 1.2rem;">🧠 Photographic Memory</h4>
+                    <p class="bento-text" style="font-size: 0.95rem;">Ask him, <em>"What was on my screen 20 mins ago?"</em> His encrypted recall engine instantly finds the exact frame.</p>
+                  </div>
+                  <div>
+                    <h4 style="color: #ffecd6; margin-bottom: 0.5rem; font-size: 1.2rem;">🚀 Predictive Autopilot</h4>
+                    <p class="bento-text" style="font-size: 0.95rem;">Tracks daily habits to automatically pre-launch your software workflows just before you need them.</p>
+                  </div>
+                </div>
               </div>
             </article>
 
-            <!-- Feature 2 -->
-            <article class="ai-feature-card reveal" style="background: rgba(255, 255, 255, 0.02); padding: 2.5rem; border-radius: 20px; border: 1px solid rgba(255, 180, 100, 0.1); backdrop-filter: blur(10px); transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 30px rgba(255, 140, 0, 0.1)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
-              <div class="ai-feature-text">
-                <h3 style="margin-bottom: 1rem; color: #ffecd6; font-family: 'Fraunces', serif; font-size: 1.5rem;">🔒 Biometric Voice Lock</h3>
-                <p style="color: #b5aba0; line-height: 1.7;">Your AI is fiercely loyal. Mr David uses advanced audio frequency analysis to recognize your unique voice print. If an unauthorized intruder tries to give him a command, he automatically locks down the system and refuses to comply.</p>
+            <!-- Voice Control (Half width) -->
+            <article class="bento-card bento-half">
+              <div class="bento-content">
+                <h3 class="bento-title">🎙️ Total Voice Control</h3>
+                <p class="bento-text">Trigger Mr David simply by saying his name. Tell him to open applications, search the web, type emails, or scroll pages—he physically executes system commands instantly on your machine.</p>
               </div>
             </article>
 
-            <!-- Dashboard Feature (Privacy Guardian & Predictive Autopilot) -->
-            <article class="ai-feature-card reveal" style="grid-column: 1 / -1; background: rgba(255, 255, 255, 0.02); padding: 3rem; border-radius: 20px; border: 1px solid rgba(255, 180, 100, 0.1); backdrop-filter: blur(10px); display: grid; grid-template-columns: 1fr; text-align: center;">
-              <img src="assets/new_dashboard.jpg" alt="Command Center Dashboard" class="ai-feature-image" style="width: 100%; max-width: 900px; margin: 0 auto 3rem auto; border-radius: 12px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); border: 1px solid rgba(255, 180, 100, 0.2);">
-              
-              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem; text-align: left;">
-                <div class="ai-feature-text">
-                  <h3 style="margin-bottom: 1rem; color: #ffecd6; font-family: 'Fraunces', serif; font-size: 1.5rem;">🛡️ Privacy Guardian</h3>
-                  <p style="color: #b5aba0; line-height: 1.7;">Constantly watching your back. The built-in Privacy Guardian silently monitors background processes, outbound network ports, and clipboard modifications to detect and block malicious spyware or crypto-hijacking in real-time.</p>
-                </div>
-                <div class="ai-feature-text">
-                  <h3 style="margin-bottom: 1rem; color: #ffecd6; font-family: 'Fraunces', serif; font-size: 1.5rem;">🧠 Photographic Memory</h3>
-                  <p style="color: #b5aba0; line-height: 1.7;">Mr David remembers everything you've seen. Ask him, <em>"What was that phone number I saw on my screen 20 minutes ago?"</em> and his photographic recall engine will instantly search his encrypted screenshot history to find the exact frame and answer you.</p>
-                </div>
-                <div class="ai-feature-text">
-                  <h3 style="margin-bottom: 1rem; color: #ffecd6; font-family: 'Fraunces', serif; font-size: 1.5rem;">🚀 Predictive Autopilot</h3>
-                  <p style="color: #b5aba0; line-height: 1.7;">He learns your habits. The Autopilot tracks what apps you use and automatically pre-launches your software workflows just before you need them.</p>
-                </div>
+            <!-- Biometrics (Half width) -->
+            <article class="bento-card bento-half">
+              <div class="bento-content">
+                <h3 class="bento-title">🔒 Biometric Voice Lock</h3>
+                <p class="bento-text">Your AI is fiercely loyal. Mr David uses advanced audio frequency analysis to recognize your unique voice print. If an unauthorized intruder tries to give him a command, he automatically locks down the system and refuses to comply.</p>
               </div>
             </article>
+
           </div>
         </div>
       </section>
 
-      <!-- TECH STACK -->
-      <section class="ai-tech section section-soft-dark" style="border-top: 1px solid rgba(255, 180, 100, 0.1);">
+      <!-- TECH STACK BENTO -->
+      <section class="ai-tech section">
         <div class="container">
           <div class="section-head reveal text-center">
-            <h2 class="section-title" style="font-family: 'Fraunces', serif; color: #ffecd6;">Built with extreme precision.</h2>
-            <p class="section-copy" style="max-width: 600px; margin: 0 auto; color: #b5aba0;">Proudly engineered from the ground up by Ezeilo David Chisom, showcasing complex, full-stack, AI-native desktop capabilities.</p>
+            <h2 class="bento-title" style="font-size: 2.5rem;">Built with extreme precision.</h2>
+            <p class="bento-text" style="max-width: 600px; margin: 0 auto;">Proudly engineered from the ground up by Ezeilo David Chisom, showcasing complex, full-stack, AI-native desktop capabilities.</p>
           </div>
-          <div class="skills-grid reveal" style="margin-top: 4rem;">
-            <article class="skill-card ai-skill-card" style="background: rgba(255, 255, 255, 0.02); border-color: rgba(255, 180, 100, 0.1);">
-              <h3 style="color: #ffecd6; font-family: 'Fraunces', serif;">Frontend Architecture</h3>
-              <p style="color: #b5aba0;">Built with React 19, Vite, and Electron, featuring a translucent, glassmorphism UI overlay and dynamic WebSocket state management.</p>
-            </article>
-            <article class="skill-card ai-skill-card" style="background: rgba(255, 255, 255, 0.02); border-color: rgba(255, 180, 100, 0.1);">
-              <h3 style="color: #ffecd6; font-family: 'Fraunces', serif;">Backend Architecture</h3>
-              <p style="color: #b5aba0;">A robust, multi-threaded Python backend handling system-level commands, process monitoring (psutil), and local SQLite database encryption.</p>
-            </article>
-            <article class="skill-card ai-skill-card" style="background: rgba(255, 255, 255, 0.02); border-color: rgba(255, 180, 100, 0.1);">
-              <h3 style="color: #ffecd6; font-family: 'Fraunces', serif;">AI Brain</h3>
-              <p style="color: #b5aba0;">Powered by a redundant fallback mesh of state-of-the-art LLMs (Anthropic Claude 3.5 Sonnet, Google Gemini 2.0 Flash, and Meta Llama 3 on Groq).</p>
-            </article>
-            <article class="skill-card ai-skill-card" style="background: rgba(255, 255, 255, 0.02); border-color: rgba(255, 180, 100, 0.1);">
-              <h3 style="color: #ffecd6; font-family: 'Fraunces', serif;">Speech Engine</h3>
-              <p style="color: #b5aba0;">Zero-latency audio transcription via Groq's Whisper API, paired with natural-sounding vocal generation via Microsoft Edge-TTS.</p>
-            </article>
-            <article class="skill-card ai-skill-card" style="background: rgba(255, 255, 255, 0.02); border-color: rgba(255, 180, 100, 0.1);">
-              <h3 style="color: #ffecd6; font-family: 'Fraunces', serif;">Distribution</h3>
-              <p style="color: #b5aba0;">Compiled into a single, fully-isolated 64-bit Self-Extracting Executable (SFX) that bypasses strict memory limits and natively installs local shortcuts.</p>
-            </article>
+          
+          <div class="reveal" style="text-align: center; margin-top: 3rem; max-width: 900px; margin-left: auto; margin-right: auto;">
+            <div class="bento-card" style="padding: 3rem;">
+              <h3 class="bento-title" style="margin-bottom: 2rem;">The Architecture</h3>
+              
+              <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 3rem;">
+                <span class="tech-pill">React 19</span>
+                <span class="tech-pill">Electron</span>
+                <span class="tech-pill">Vite</span>
+                <span class="tech-pill">Python Backend</span>
+                <span class="tech-pill">SQLite Encryption</span>
+                <span class="tech-pill">WebSockets</span>
+                <span class="tech-pill">Claude 3.5 Sonnet</span>
+                <span class="tech-pill">Gemini 2.0 Flash</span>
+                <span class="tech-pill">Llama 3</span>
+                <span class="tech-pill">Groq Whisper API</span>
+                <span class="tech-pill">Edge-TTS</span>
+              </div>
+              
+              <p class="bento-text" style="max-width: 700px; margin: 0 auto;">
+                Powered by a redundant fallback mesh of state-of-the-art LLMs with zero-latency audio transcription. The entire system is compiled into a single, fully-isolated 64-bit Self-Extracting Executable (SFX) that bypasses strict memory limits and natively installs local shortcuts.
+              </p>
+            </div>
           </div>
         </div>
       </section>
     </main>
 
-    <footer class="site-footer" style="background: #080706; border-top: 1px solid rgba(255, 180, 100, 0.1); color: #ffecd6;">
+    <footer class="site-footer" style="background: rgba(0,0,0,0.5); border-top: 1px solid rgba(255, 180, 100, 0.1); margin-top: 4rem;">
       <div class="container footer-row">
-        <p>Built by Ezeilo David Chisom.</p>
+        <p style="color: #a3998f;">Built by Ezeilo David Chisom.</p>
         <div class="footer-links">
           <a href="index.html" style="color: #ffecd6;">Home</a>
           <a href="projects.html" style="color: #ffecd6;">Projects</a>
@@ -148,34 +164,34 @@
   </div>
 
   <!-- PAYSTACK MODAL -->
-  <div class="modal-overlay" id="checkout-modal" style="background: rgba(0,0,0,0.85); backdrop-filter: blur(16px);">
-    <div class="modal-content checkout-content ai-modal" style="background: #110e0c; border: 1px solid rgba(255, 180, 100, 0.2); box-shadow: 0 20px 60px rgba(0,0,0,0.8);">
+  <div class="modal-overlay" id="checkout-modal" style="background: rgba(0,0,0,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);">
+    <div class="modal-content checkout-content ai-modal" style="background: rgba(15, 12, 10, 0.95); border: 1px solid rgba(255, 180, 100, 0.2); box-shadow: 0 20px 60px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.05); border-radius: 24px;">
       <button class="modal-close" id="close-checkout-btn" aria-label="Close modal" style="color: #ffecd6;">&times;</button>
       <div class="checkout-header">
-        <h2 class="section-title" style="margin-bottom: 0.5rem; color: #ffecd6; font-family: 'Fraunces', serif;">Mr David AI Agent</h2>
-        <p class="project-category" style="margin-bottom: 1.5rem; background: rgba(255, 179, 71, 0.15); color: #ffb347; border: 1px solid rgba(255, 179, 71, 0.3);">Voice Controlled Desktop Assistant</p>
+        <h2 class="bento-title" style="margin-bottom: 0.5rem; font-size: 2rem;">Mr David AI Agent</h2>
+        <span class="tech-pill" style="margin-bottom: 1.5rem; border-color: #ffb347; color: #ffb347;">Voice Controlled Desktop Assistant</span>
       </div>
       
       <div class="checkout-body">
-        <p style="margin-bottom: 1rem; color: #b5aba0;">Control your full desktop or laptop using natural voice commands. Complete your purchase to download the secure executable immediately.</p>
+        <p style="margin-bottom: 1.5rem; color: #b5aba0; line-height: 1.6;">Control your full desktop or laptop using natural voice commands. Complete your purchase to download the secure executable immediately.</p>
         
-        <div style="background: rgba(255, 69, 58, 0.1); border-left: 4px solid #ff453a; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
-          <p style="color: #ff453a; font-weight: 700; font-size: 0.9rem; margin-bottom: 0.25rem;">⚠️ IMPORTANT WARNING</p>
-          <p style="color: #ff453a; font-size: 0.85rem; line-height: 1.4;">This software can <strong>only be downloaded on a Windows desktop or laptop</strong>. If you pay using a mobile phone, the download will fail and you will have to purchase it again. Please ensure you are on your PC right now.</p>
+        <div style="background: rgba(255, 69, 58, 0.1); border-left: 4px solid #ff453a; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+          <p style="color: #ff453a; font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem;">⚠️ IMPORTANT WARNING</p>
+          <p style="color: #ff453a; font-size: 0.9rem; line-height: 1.5;">This software can <strong>only be downloaded on a Windows desktop or laptop</strong>. If you pay using a mobile phone, the download will fail and you will have to purchase it again. Please ensure you are on your PC right now.</p>
         </div>
 
-        <div class="price-tag" style="font-size: 2rem; font-weight: 700; color: #ffecd6; margin-bottom: 2rem; font-family: 'Fraunces', serif;">
+        <div class="price-tag" style="font-size: 2.5rem; font-weight: 700; color: #ffecd6; margin-bottom: 2rem; font-family: 'Fraunces', serif;">
           ₦20,000
         </div>
         
         <form id="paystack-form">
           <label>
-            <span style="color: #b5aba0; font-weight: 600;">Your Email (for receipt)</span>
-            <input type="email" id="customer-email" placeholder="you@example.com" required style="margin-bottom: 1rem; width: 100%; background: rgba(255,255,255,0.05); color: #ffecd6; border: 1px solid rgba(255, 180, 100, 0.2); border-radius: 8px; padding: 0.8rem;">
+            <span style="color: #b5aba0; font-weight: 600; display: block; margin-bottom: 0.5rem;">Your Email (for receipt)</span>
+            <input type="email" id="customer-email" placeholder="you@example.com" required style="margin-bottom: 1.5rem; width: 100%; background: rgba(0,0,0,0.5); color: #ffecd6; border: 1px solid rgba(255, 180, 100, 0.2); border-radius: 12px; padding: 1rem; font-size: 1rem; outline: none; transition: border-color 0.3s ease;">
           </label>
-          <button type="submit" class="btn btn-primary ai-buy-btn" style="width: 100%; justify-content: center; font-size: 1.1rem; border-radius: 8px;">Pay securely with Paystack</button>
+          <button type="submit" class="ai-buy-btn-master" style="width: 100%; justify-content: center;">Pay securely with Paystack</button>
         </form>
-        <p id="checkout-status" class="form-status" style="text-align: center; margin-top: 1rem;" aria-live="polite"></p>
+        <p id="checkout-status" class="form-status" style="text-align: center; margin-top: 1rem; color: #ffecd6;" aria-live="polite"></p>
         
         <!-- Hidden link triggered automatically after payment -->
         <a id="hidden-download-link" href="https://drive.google.com/file/d/1eBK3tADjGTioor3SyKW_5KcqEfe8GiRP/view?usp=sharing" target="_blank" style="display: none;">Download</a>
@@ -186,5 +202,18 @@
   <script src="https://js.paystack.co/v1/inline.js"></script>
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="script.js"></script>
+
+  <!-- Interactive Bento Box Glow Script -->
+  <script>
+    document.getElementById("bento-container").onmousemove = e => {
+      for(const card of document.getElementsByClassName("bento-card")) {
+        const rect = card.getBoundingClientRect(),
+              x = e.clientX - rect.left,
+              y = e.clientY - rect.top;
+        card.style.setProperty("--mouse-x", `${x}px`);
+        card.style.setProperty("--mouse-y", `${y}px`);
+      }
+    }
+  </script>
 </body>
 </html>
