@@ -50,6 +50,29 @@
   initAdminPanel();
   initSecretDoor();
   initCheckout();
+  initGuide();
+
+  function initGuide() {
+    const openBtn = document.getElementById("open-guide-btn");
+    const closeBtn = document.getElementById("close-guide-btn");
+    const modal = document.getElementById("guide-modal");
+
+    if (!openBtn || !modal) return;
+
+    openBtn.addEventListener("click", () => {
+      modal.classList.add("active");
+    });
+
+    closeBtn.addEventListener("click", () => {
+      modal.classList.remove("active");
+    });
+
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.classList.remove("active");
+      }
+    });
+  }
 
   function initCheckout() {
     const openBtn = document.getElementById("open-checkout-btn");

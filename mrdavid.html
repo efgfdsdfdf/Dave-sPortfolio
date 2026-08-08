@@ -39,9 +39,12 @@
           <p class="ai-subheadline">
             Built entirely by Ezeilo David Chisom. Mr David isn't just a chatbot—he is a fully integrated desktop companion that sees your screen, learns your habits, and controls your PC, all while locked behind military-grade voice biometrics.
           </p>
-          <div class="hero-actions" style="justify-content: center; margin-top: 3.5rem;">
+          <div class="hero-actions" style="justify-content: center; margin-top: 3.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
             <button id="open-checkout-btn" class="ai-buy-btn-master">
               Get Early Access - ₦20,000
+            </button>
+            <button id="open-guide-btn" style="background: transparent; border: 2px solid rgba(255, 179, 71, 0.4); color: #ffecd6; padding: 1.2rem 2.5rem; border-radius: 30px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+              Quick Start Guide
             </button>
           </div>
         </div>
@@ -249,6 +252,60 @@
         
         <!-- Hidden link triggered automatically after payment -->
         <a id="hidden-download-link" href="https://drive.google.com/file/d/1eBK3tADjGTioor3SyKW_5KcqEfe8GiRP/view?usp=sharing" target="_blank" style="display: none;">Download</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- GUIDE MODAL -->
+  <div class="modal-overlay" id="guide-modal" style="background: rgba(0,0,0,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);">
+    <div class="modal-content ai-modal" style="background: rgba(15, 12, 10, 0.95); border: 1px solid rgba(255, 180, 100, 0.2); box-shadow: 0 20px 60px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.05); border-radius: 24px; max-width: 800px; padding: 3rem;">
+      <button class="modal-close" id="close-guide-btn" aria-label="Close modal" style="color: #ffffff;">&times;</button>
+      
+      <div class="checkout-header" style="text-align: center; margin-bottom: 2rem;">
+        <h2 class="bento-title" style="margin-bottom: 0.5rem; font-size: 2.2rem; color: #ffffff;">🚀 Mr David Quick Start Guide</h2>
+        <p style="color: #e3ded8; font-size: 1.1rem; line-height: 1.6;">Welcome to <strong>Mr David</strong>, your private, AI-powered desktop assistant!</p>
+      </div>
+      
+      <div class="guide-body" style="color: #d8cfc6; line-height: 1.7; font-size: 1.05rem; text-align: left; max-height: 60vh; overflow-y: auto; padding-right: 1rem;">
+        <p style="margin-bottom: 2rem;">This guide will show you how to install Mr David and connect him to <strong>OmniRoute</strong>—a free AI proxy server that gives Mr David unlimited access to advanced AI models without requiring any paid API keys.</p>
+
+        <h3 style="color: #ffffff; font-family: 'Fraunces', serif; font-size: 1.5rem; margin: 2rem 0 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">🛠️ Step 1: Install Mr David</h3>
+        <ol style="padding-left: 1.5rem; margin-bottom: 1.5rem;">
+          <li style="margin-bottom: 0.5rem;">Double-click the <code style="background: rgba(255,255,255,0.1); padding: 0.2rem 0.4rem; border-radius: 4px; color: #ffb347;">MrDavid_Setup.exe</code> file.</li>
+          <li style="margin-bottom: 0.5rem;">Follow the standard Windows installation prompts.</li>
+          <li style="margin-bottom: 0.5rem;">Once installed, Mr David will automatically launch, and you will see the <strong>Command Center</strong>.</li>
+        </ol>
+
+        <h3 style="color: #ffffff; font-family: 'Fraunces', serif; font-size: 1.5rem; margin: 2rem 0 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">🌐 Step 2: Start the Free AI Engine (OmniRoute)</h3>
+        <p style="margin-bottom: 1rem;">Mr David needs a "brain" to think. Instead of paying for API keys, we use OmniRoute to pool free models from the internet.</p>
+        <ol style="padding-left: 1.5rem; margin-bottom: 1.5rem;">
+          <li style="margin-bottom: 0.5rem;">Ensure you have <strong>Node.js</strong> installed on your computer. If you don't, download and install the LTS version from <a href="https://nodejs.org/" target="_blank" style="color: #ffb347; text-decoration: underline;">nodejs.org</a>.</li>
+          <li style="margin-bottom: 0.5rem;">Open your Windows <strong>Command Prompt</strong> (search for <code style="background: rgba(255,255,255,0.1); padding: 0.2rem 0.4rem; border-radius: 4px; color: #ffb347;">cmd</code> in the Start menu).</li>
+          <li style="margin-bottom: 0.5rem;">Type the following command and press Enter:
+            <pre style="background: #000000; padding: 1rem; border-radius: 8px; margin: 0.5rem 0; border: 1px solid rgba(255,255,255,0.1);"><code style="color: #4ade80; font-family: monospace;">npx omniroute@latest</code></pre>
+          </li>
+          <li style="margin-bottom: 0.5rem;"><em>Wait a few seconds.</em> You will see a message saying the server has started on <code style="background: rgba(255,255,255,0.1); padding: 0.2rem 0.4rem; border-radius: 4px; color: #ffb347;">http://localhost:20128</code>.</li>
+          <li style="margin-bottom: 0.5rem;"><strong>Leave this black window open!</strong> This is Mr David's active connection to the internet.</li>
+        </ol>
+
+        <h3 style="color: #ffffff; font-family: 'Fraunces', serif; font-size: 1.5rem; margin: 2rem 0 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem;">🧠 Step 3: Connect Mr David to the Engine</h3>
+        <p style="margin-bottom: 1rem;">Now that OmniRoute is running, let's tell Mr David where to find it.</p>
+        <ol style="padding-left: 1.5rem; margin-bottom: 1.5rem;">
+          <li style="margin-bottom: 0.5rem;">Open the <strong>Mr David Command Center</strong> window.</li>
+          <li style="margin-bottom: 0.5rem;">Navigate to the <strong>Settings</strong> or <strong>Identity Profile</strong> tab.</li>
+          <li style="margin-bottom: 0.5rem;">Look for the <strong>"Custom API Endpoint"</strong> field.</li>
+          <li style="margin-bottom: 0.5rem;">Paste the following URL exactly as shown:
+            <pre style="background: #000000; padding: 1rem; border-radius: 8px; margin: 0.5rem 0; border: 1px solid rgba(255,255,255,0.1);"><code style="color: #ffb347; font-family: monospace;">http://localhost:20128/v1</code></pre>
+          </li>
+          <li style="margin-bottom: 0.5rem;">Click <strong>Save Configuration</strong>.</li>
+        </ol>
+
+        <div style="background: rgba(255, 179, 71, 0.1); border-left: 4px solid #ffb347; padding: 1.5rem; border-radius: 12px; margin-top: 3rem;">
+          <h3 style="color: #ffb347; font-family: 'Fraunces', serif; font-size: 1.3rem; margin-top: 0; margin-bottom: 0.5rem;">🎉 You're Done!</h3>
+          <p style="margin-bottom: 1rem;">Mr David is now fully operational and running on free AI models!</p>
+          <p style="margin-bottom: 0.5rem;"><strong>To talk to him:</strong> Simply say his wake word or use the desktop Orb to start a conversation. He will use the OmniRoute connection in the background to process your requests.</p>
+          <p style="font-size: 0.9rem; opacity: 0.8; font-style: italic; margin-bottom: 0;">Note: Every time you restart your computer, you will need to open Command Prompt and run <code style="background: rgba(255,255,255,0.1); padding: 0.1rem 0.3rem; border-radius: 4px;">npx omniroute</code> to wake up his brain.</p>
+        </div>
       </div>
     </div>
   </div>
