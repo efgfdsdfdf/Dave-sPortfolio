@@ -41,7 +41,7 @@
           </p>
           <div class="hero-actions" style="justify-content: center; margin-top: 3.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
             <button id="open-checkout-btn" class="ai-buy-btn-master">
-              Buy License Key - ₦20,000/yr
+              Buy License Key
             </button>
             <button id="open-guide-btn" style="background: transparent; border: 2px solid rgba(255, 179, 71, 0.4); color: #ffecd6; padding: 1.2rem 2.5rem; border-radius: 30px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
               Quick Start Guide
@@ -222,8 +222,12 @@
           <p style="color: #ff453a; font-size: 0.9rem; line-height: 1.5;"><strong>System Requirements:</strong> For Mr David to run smoothly and protect your privacy, he requires a 64-bit processor running Windows 10 or Windows 11!</p>
         </div>
 
-        <div class="price-tag" style="font-size: 2.5rem; font-weight: 700; color: #ffffff; margin-bottom: 2rem; font-family: 'Fraunces', serif;">
-          ₦20,000
+        <div style="margin-bottom: 2rem;">
+          <label style="color: #e3ded8; font-weight: 600; display: block; margin-bottom: 0.5rem;">Select Subscription Plan</label>
+          <select id="subscription-plan" style="width: 100%; background: rgba(0,0,0,0.5); color: #ffffff; border: 1px solid rgba(255, 180, 100, 0.2); border-radius: 12px; padding: 1rem; font-size: 1rem; outline: none; transition: border-color 0.3s ease;">
+            <option value="50000">Yearly Plan - ₦50,000/yr (Best Value)</option>
+            <option value="10000">Monthly Plan - ₦10,000/mo</option>
+          </select>
         </div>
         
         <form id="paystack-form">
@@ -235,8 +239,6 @@
         </form>
         <p id="checkout-status" class="form-status" style="text-align: center; margin-top: 1rem; color: #ffffff;" aria-live="polite"></p>
         
-        <!-- Hidden link triggered automatically after payment -->
-        <a id="hidden-download-link" href="https://drive.google.com/file/d/1eBK3tADjGTioor3SyKW_5KcqEfe8GiRP/view?usp=sharing" target="_blank" style="display: none;">Download</a>
       </div>
     </div>
   </div>

@@ -80,7 +80,6 @@
     const modal = document.getElementById("checkout-modal");
     const form = document.getElementById("paystack-form");
     const statusEl = document.getElementById("checkout-status");
-    const downloadLink = document.getElementById("hidden-download-link");
 
     if (!openBtn || !modal) return;
 
@@ -116,9 +115,8 @@
               .single();
 
             if (data) {
-              statusEl.textContent = "Free access granted! Downloading your agent...";
+              statusEl.textContent = "Free access granted! Check your email for your License Key.";
               statusEl.className = "form-status form-status-success";
-              downloadLink.click();
               setTimeout(() => {
                 modal.classList.remove("active");
                 statusEl.textContent = "";
@@ -131,22 +129,24 @@
           console.error(err);
         }
 
+        const planSelect = document.getElementById("subscription-plan");
+        const amountStr = planSelect ? planSelect.value : "50000";
+        const amount = parseInt(amountStr, 10);
+
         statusEl.textContent = "Processing payment...";
         statusEl.className = "form-status form-status-success";
 
         const handler = PaystackPop.setup({
           key: "pk_live_be8fc1620f7a377f14be7622e93ce06d1426f2e3", // Live Key
           email: email,
-          amount: 20000 * 100, // 20k NGN in kobo
+          amount: amount * 100, // Amount in kobo
           currency: "NGN",
           callback: function (response) {
-            statusEl.textContent = "Payment successful! Downloading your agent...";
-            // Trigger the download automatically
-            downloadLink.click();
+            statusEl.textContent = "Payment successful! Please check your email for the License Key.";
             setTimeout(() => {
               modal.classList.remove("active");
               statusEl.textContent = "";
-            }, 3000);
+            }, 4000);
           },
           onClose: function () {
             statusEl.textContent = "Payment window closed.";
