@@ -130,8 +130,7 @@
         }
 
         const planSelect = document.getElementById("subscription-plan");
-        const amountStr = planSelect ? planSelect.value : "50000";
-        const amount = parseInt(amountStr, 10);
+        const planCode = planSelect ? planSelect.value : "PLN_sfp9cvip5p7me99";
 
         statusEl.textContent = "Processing payment...";
         statusEl.className = "form-status form-status-success";
@@ -139,7 +138,7 @@
         const handler = PaystackPop.setup({
           key: "pk_live_be8fc1620f7a377f14be7622e93ce06d1426f2e3", // Live Key
           email: email,
-          amount: amount * 100, // Amount in kobo
+          plan: planCode, // Subscription Plan Code
           currency: "NGN",
           callback: function (response) {
             statusEl.textContent = "Payment successful! Please check your email for the License Key.";
